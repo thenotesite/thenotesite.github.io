@@ -1,0 +1,379 @@
+<html>
+    <head>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+        <link rel="icon" type="image/png" href="fav.png" />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Rubik+Wet+Paint&display=swap");
+            body {
+                font-family: "Rubik Wet Paint", cursive;
+                background-image: url("img4.jpg");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            .leftcurtain {
+                width: 50%;
+                height: 100%;
+                top: 0px;
+                left: 0px;
+                position: fixed;
+                z-index: 1;
+            }
+
+            .rightcurtain {
+                width: 50%;
+                height: 100%;
+                right: 0px;
+                top: 0px;
+                position: fixed;
+                z-index: 2;
+            }
+
+            .rightcurtain img,
+            .leftcurtain img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .rope {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                text-decoration: none;
+                z-index: 2;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            @keyframes zoom_inout {
+                0% {
+                    transform: scale(1, 1);
+                }
+                50% {
+                    transform: scale(1.1, 1.1);
+                }
+                100% {
+                    transform: scale(1, 1);
+                }
+            }
+
+            .zoomInout {
+                animation: zoom_inout 1s infinite;
+            }
+
+            .mainContainer {
+                --borderWidth: 5px;
+                background: #101010;
+                position: relative;
+                width: 94%;
+                min-height: 700px;
+                margin: 6% auto;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .mainContainer:after {
+                content: "";
+                position: absolute;
+                top: calc(-1 * var(--borderWidth));
+                left: calc(-1 * var(--borderWidth));
+                height: calc(100% + var(--borderWidth) * 2);
+                width: calc(100% + var(--borderWidth) * 2);
+                background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+                z-index: -1;
+                animation: animatedgradient 1s ease alternate infinite;
+                background-size: 300% 300%;
+            }
+
+            @keyframes animatedgradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            #show-name {
+                font-size: 40px;
+                background: linear-gradient(60deg, #d66149, #dd8400, #406fce, #000);
+                -webkit-background-clip: text;
+                color: transparent;
+                animation: animatedgradient 1s ease alternate infinite;
+                background-size: 300% 300%;
+            }
+
+            #fromMessage {
+                background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+                -webkit-background-clip: text;
+                color: transparent;
+                animation: animatedgradient 1s ease alternate infinite;
+                background-size: 200% 200%;
+                font-size: 30px;
+            }
+
+            #demo {
+                color: #d9d9d9;
+                font-family: "Rubik Glitch", cursive;
+            }
+
+            .texts {
+                background-color: #000;
+                padding: 25px;
+                color: #d9d9d9;
+                border: 1px solid #d9d9d9;
+            }
+
+            .text-gradient {
+                background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+            .text-right {
+                font-family: times;
+                text-align: right;
+                color: #353535;
+            }
+            .fixed {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+                animation: animatedgradient 1s ease alternate infinite;
+                background-size: 300% 300%;
+            }
+
+            #formBox {
+                margin: 5% 5% 0%;
+                width: 90%;
+            }
+
+            #nameTextBox {
+                border: 2.5px solid #292929;
+                width: 80%;
+                height: 45px;
+                background: #f3f3f3;
+                padding: 15px;
+                outline: none;
+                font-family: "Rubik Wet Paint", cursive;
+            }
+
+            #goButton {
+                width: 20%;
+                background: #292929;
+                border: 2.5px solid #292929;
+                float: right;
+                height: 45px;
+                color: #f3f3f3;
+                font-family: "Rubik Wet Paint", cursive;
+                cursor: pointer;
+            }
+
+            .footerbtn {
+                display: none;
+                padding: 13px;
+                background: #17d2aa;
+                color: #ffffff;
+                text-align: center;
+                text-decoration: none;
+                width: 90%;
+                margin: 0% 0% 5% 5%;
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $curtainopen = false;
+                $(".rope").click(function () {
+                    if ($curtainopen == false) {
+                        $(this).stop().animate(
+                            {
+                                top: "-1000%",
+                            },
+                            {
+                                duration: 500,
+                            }
+                        );
+                        $(".leftcurtain").stop().animate(
+                            {
+                                width: "0px",
+                            },
+                            3000
+                        );
+                        $(".rightcurtain").stop().animate(
+                            {
+                                width: "0px",
+                            },
+                            3000
+                        );
+                    }
+                    return false;
+                });
+            });
+        </script>
+        <script>
+            function PlaySound() {
+                var sound = document.getElementById("audiocracker");
+                sound.play();
+            }
+        </script>
+    </head>
+    <body>
+        <div class="LEFtcurtain"><img src="img2.jpg" /></div>
+        <div class="RIGhtcurtain"><img src="img3.jpg" /></div>
+        <a class="ROPE" onclick="PlaySound()">
+            <div class="text-gradient">Touch the heart!</div>
+            <div class="zoomInout"><img src="img1.png" height="auto" width="200px" /></div>
+        </a>
+        <audio id="audiocracker" src="xyz.mp3" autostart="false"></audio>
+
+        <!--------------Start-------------->
+        <div class="mainContainer">
+            <p id="show-name">[ Your Name ]</p>
+            <p id="fromMessage">Wishing You</p>
+            <p id="demo">
+                0 Days, 0 Hrs, 0 Min, 0 Sec<br />
+                Before
+            </p>
+            <img src="img5.png" width="100%" height="auto" />
+            <div class="text-gradient">
+                Happy Friendship Day!
+            </div>
+            <br />
+            <p class="texts">
+                True friends are never apart, maybe in distance but never in heart. Happy Friendship Day!<br />
+                —–♥–—
+            </p>
+            <div>
+                <img class="mySlides" src="img6.jpg" style="width: 100%;" />
+                <img class="mySlides" src="img7.jpg" style="width: 100%;" />
+                <img class="mySlides" src="img8.jpg" style="width: 100%;" />
+            </div>
+            <p class="text-gradient">
+                Happy Friendship Day!
+            </p>
+            <br />
+            <p class="text-right">©Mandip</p>
+            <br />
+            <br />
+            <br />
+            <div class="fixed">
+                <div id="formBox">
+                    <input type="text" name="name" id="nameTextBox" placeholder="Enter Your Name" />
+                    <button id="goButton" onclick="createGreeting()">Wish</button>
+                </div>
+                <br />
+                <a class="footerbtn" href="javascript:void(0)" onclick="shareActionWA()">Share with your Friends</a>
+            </div>
+        </div>
+        <!--------------End-------------->
+    </body>
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("Aug 07, 2022 00:00:00").getTime();
+
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("demo").innerHTML =
+                days + "<font color='red'> Day,</font> " + hours + "<font color='red'>  Hrs,</font> " + minutes + "<font color='red'> Min,</font> " + seconds + "<font color='red'> Sec <br></font> Before ";
+
+            // If the count down is over, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("demo").innerHTML = "";
+            }
+        }, 1000);
+    </script>
+    <script>
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) {
+                myIndex = 1;
+            }
+            x[myIndex - 1].style.display = "block";
+            setTimeout(carousel, 1000); // Change image every 1 seconds
+        }
+    </script>
+    <script>
+        var jqs = function (sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split("&");
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split("=");
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1];
+                }
+            }
+        };
+        window.jqs = jqs;
+        var name = decodeURI(jqs("n"));
+        if (typeof jqs("n") === "undefined") {
+            name = "";
+        }
+        var checkName = function () {
+            if (name.length !== 0) {
+                name = name.replace(/-/g, " ");
+                document.querySelector("#show-name").innerHTML = name;
+                document.querySelector("#fromMessage").innerHTML = "Wishing You";
+            } else {
+            }
+        };
+
+        checkName();
+
+        var createGreeting = function () {
+            sname = document.querySelector("#nameTextBox").value;
+            if (sname.trim() != "") {
+                document.querySelector("#formBox").style.display = "none";
+                document.querySelector(".footerbtn").style.display = "block";
+                document.querySelector("#show-name").innerHTML = sname;
+                document.querySelector("#fromMessage").innerHTML = "Wishing You";
+                window.scrollTo(0, 0);
+            } else {
+                document.getElementById("nameTextBox").focus();
+            }
+        };
+
+        var shareActionWA = function () {
+            var shareString = "";
+            var whatsappHref;
+            shareString += "*" + sname + "*";
+            shareString += "%0ASend a special message for you, click on the below link%0A";
+            shareString += (window.location.href.split("?")[0] + "?n=" + sname).replace(/ /g, "-");
+            whatsappHref = "whatsapp://send?text=" + shareString;
+            window.location.href = whatsappHref;
+        };
+    </script>
+</html>

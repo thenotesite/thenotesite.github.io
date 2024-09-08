@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+        <title>Typing Test - 600s [10m]</title>
+        <link rel="icon" type="image/png" href="fav.png" />
+        <meta name="theme-color" content="#330066" />
+        <style>
+            .h_contents {
+                background: #330066;
+            }
+        </style>
+        <link rel="stylesheet" href="style.css" />
+        <script src="text.json"></script>
+    </head>
+    <body spellcheck="false">
+        <main class="typingtest">
+            <header class="h_contents">
+                <ul class="result-details">
+                    <div id="finishdiv">
+                        <li>
+                            <p>WPM: <span id="words">0</span></p>
+                        </li>
+                        <li>
+                            <p>CORRECT: <span id="characters">0</span></p>
+                        </li>
+                        <li>
+                            <p>MISTAKES: <span id="errors">0</span></p>
+                        </li>
+                    </div>
+                    <div id="startdiv">
+                        <li>
+                            <p>TIME: <span id="time">600s </span><span id="timefooter">Start typing!</span></p>
+                        </li>
+                    </div>
+                </ul>
+                <ul>
+                    Choose times ↴
+                </ul>
+                <ul id="f_size" class="result-details">
+                    <li><a href="index.html">60s [1m]</a></li>
+                    <li><a href="five.html">300s [5m]</a></li>
+                    <li><a href="ten.html">600s [10m]</a></li>
+                    <li><a href="twenty.html">1200s [20m]</a></li>
+                </ul>
+            </header>
+            <section>
+                <audio id="correct-sound" src="correct.mp3"></audio>
+                <audio id="wrong-sound" src="wrong.mp3"></audio>
+                <div style="position: relative;">
+                    <div id="btext" style="color: transparent;"></div>
+                    <div id="ctext" onblur="unfocus()" onkeyup="ku(event)" style="outline: 0; color: transparent;" contenteditable="true"></div>
+                    <div id="dtext"></div>
+                    <div id="atext" style="background-color: white; color: #666;"></div>
+                </div>
+            </section>
+        </main>
+        <script src="ten.js"></script>
+    </body>
+</html>

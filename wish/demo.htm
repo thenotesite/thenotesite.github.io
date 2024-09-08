@@ -1,0 +1,108 @@
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<!--------------Start Curtain-------------->
+<style>
+    body {
+        background-image: url("bg.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .leftcurtain {
+        width: 50%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        z-index: 1;
+    }
+
+    .rightcurtain {
+        width: 50%;
+        height: 100%;
+        right: 0px;
+        top: 0px;
+        position: fixed;
+        z-index: 2;
+    }
+
+    .rightcurtain img,
+    .leftcurtain img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .rope {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-decoration: none;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    @keyframes zoom_inout {
+        0% {
+            transform: scale(1, 1);
+        }
+        50% {
+            transform: scale(1.1, 1.1);
+        }
+        100% {
+            transform: scale(1, 1);
+        }
+    }
+
+    .zoomInout {
+        animation: zoom_inout 1s infinite;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $curtainopen = false;
+        $(".rope").click(function () {
+            if ($curtainopen == false) {
+                $(this).stop().animate(
+                    {
+                        top: "-1000%",
+                    },
+                    {
+                        duration: 500,
+                    }
+                );
+                $(".leftcurtain").stop().animate(
+                    {
+                        width: "0px",
+                    },
+                    3000
+                );
+                $(".rightcurtain").stop().animate(
+                    {
+                        width: "0px",
+                    },
+                    3000
+                );
+            }
+            return false;
+        });
+    });
+</script>
+<div class="LEFtcurtain"><img src="img2.jpg" /></div>
+<div class="RIGhtcurtain"><img src="img3.jpg" /></div>
+<a class="ROPE" onclick="PlaySound()">
+    <div class="zoomInout"><img src="img1.png" height="auto" width="170px" /></div>
+</a>
+<audio id="audiocracker" src="xyz.mp3" autostart="false"></audio>
+<script>
+    function PlaySound() {
+        var sound = document.getElementById("audiocracker");
+        sound.play();
+    }
+</script>
+<!--------------End Curtain-------------->
