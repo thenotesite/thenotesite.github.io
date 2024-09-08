@@ -1,2 +1,3 @@
 # thenotesite.github.io
-Welcome!
+## https://thenotesite.github.io/wish/
+## https://thenotesite.github.io/typing/
