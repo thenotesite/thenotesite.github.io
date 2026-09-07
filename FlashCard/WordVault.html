@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+  <link href="word.png" rel="icon" type="image/x-icon" />
+  <title>WordVault</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      font-family: "Inter", system-ui, Arial, sans-serif;
+      color: #29293d;
+      margin: 0;
+      padding: 20px;
+      padding-top: 0;
+      background: linear-gradient(90deg, #eeeef5, #fff7f2);
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      text-align: center;
+      background: linear-gradient(-90deg, #ff4b2b, #4d96ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      margin: auto;
+      height: 550px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      transition: all 0.3s;
+    }
+
+    .left {
+      flex: 1;
+      display: flex;
+      padding: 25px;
+      overflow-y: auto;
+      flex-direction: column;
+      gap: 12px;
+      border-right: 5px solid pink;
+    }
+
+    .right {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    input,
+    textarea {
+      border: none;
+      border-bottom: 1px solid #292929;
+      background: transparent;
+      resize: vertical;
+      min-height: 70px;
+      transition: 0.3s;
+    }
+
+    input {
+      min-height: 40px;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-bottom: 1px solid #ff6a95;
+    }
+
+    button {
+      border: 1.5px solid #222;
+      border-radius: 3px;
+      cursor: pointer;
+      padding: 12px 5px;
+      background: linear-gradient(135deg, pink, white);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, white, pink);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .button-group button {
+      flex: 1;
+      width: auto;
+    }
+
+    #uploadInput {
+      display: none;
+    }
+
+    .search-container {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      padding: 25px;
+      padding-bottom: 15px;
+      display: flex;
+      gap: 7px;
+      z-index: 10;
+    }
+
+    #searchInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .search-actions button {
+      padding: 10px;
+    }
+
+    #clearSearchBtn {
+      color: #292929;
+      pointer-events: none;
+    }
+
+    #clearSearchBtn.active {
+      pointer-events: auto;
+    }
+
+    #sortBtn {
+      background: #0cc6cc;
+      color: #fff;
+    }
+
+    #sortBtn:hover {
+      background: #6666ff;
+    }
+
+    .beauty {
+      padding: 25px;
+      padding-top: 0px;
+    }
+
+    #outputArea {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .output-item {
+      flex: 1 1 calc(50% - 20px);
+      min-width: 250px;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid pink;
+      transition: border-color 0.3s ease;
+      position: relative;
+      animation: floatIn 0.5s ease forwards;
+    }
+
+    .output-item:hover {
+      border-color: #333;
+    }
+
+    @keyframes floatIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .word-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #6666ff;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 10px;
+      color: #ff9999;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .section-text {
+      white-space: pre-wrap;
+      line-height: 1.3;
+      color: #29293d;
+    }
+
+    .delete-btn,
+    .edit-btn {
+      position: absolute;
+      top: 0;
+      background: transparent;
+      border: none;
+      color: #999;
+      cursor: pointer;
+    }
+
+    .edit-btn:hover {
+      color: #0cc6cc;
+      background: transparent;
+    }
+
+    .delete-btn:hover {
+      color: #ee0979;
+      background: transparent;
+    }
+
+    .delete-btn {
+      right: 5px;
+    }
+
+    .edit-btn {
+      right: 30px;
+      font-size: 17px;
+    }
+
+    mark {
+      background: transparent;
+      color: #ff6699;
+    }
+
+    #messageBox {
+      text-align: right;
+    }
+
+    #storageUsage {
+      text-align: right;
+      margin-top: 15px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    @media (max-width: 750px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+      }
+
+      .left {
+        border-right: none;
+        border-bottom: 5px solid pink;
+      }
+
+      .right {
+        max-height: 600px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+    }
+
+    .left,
+    .right {
+      scrollbar-width: thin;
+      scrollbar-color: #40516b transparent;
+    }
+
+    .left::-webkit-scrollbar,
+    .right::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .left::-webkit-scrollbar-thumb,
+    .right::-webkit-scrollbar-thumb {
+      background: #40516b;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 id="titleHeader">WordVault</h1>
+  <div class="container">
+    <div class="left">
+      <label>WORD</label>
+      <input type="text" id="inputField" placeholder="Enter word" autofocus />
+      <label>MEANING</label>
+      <textarea id="textAreaField" placeholder="Enter meaning"></textarea>
+      <label>EXAMPLES</label>
+      <textarea id="examplesField" placeholder="Enter examples"></textarea>
+      <div id="storageUsage"></div>
+      <div id="messageBox"></div>
+      <div class="button-group">
+        <button id="addButton">Add Entry</button>
+        <button id="downloadBtn">Download JSON</button>
+        <button id="uploadBtn">Upload JSON</button>
+      </div>
+      <input type="file" id="uploadInput" accept=".json" />
+    </div>
+    <div class="right">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search entries" />
+        <div class="search-actions">
+          <button id="clearSearchBtn">x</button>
+          <button id="sortBtn">⇅</button>
+        </div>
+      </div>
+      <div class="beauty">
+        <div id="outputArea"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    /* ==========================
+         Globals & DOM Refs
+         (original code preserved)
+         ========================== */
+    let entries = JSON.parse(localStorage.getItem("entries") || "[]");
+    let editIndex = null;
+    let sortAsc = true;
+    const inputField = document.getElementById("inputField");
+    const textAreaField = document.getElementById("textAreaField");
+    const examplesField = document.getElementById("examplesField");
+    const addButton = document.getElementById("addButton");
+    const outputArea = document.getElementById("outputArea");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const uploadInput = document.getElementById("uploadInput");
+    const searchInput = document.getElementById("searchInput");
+    const messageBox = document.getElementById("messageBox");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+    const sortBtn = document.getElementById("sortBtn");
+    const titleHeader = document.getElementById("titleHeader");
+    /* ==========================
+       UI Helpers (showMessage, title/storage)
+       ========================== */
+    function showMessage(msg, type = "error", autoHide = true) {
+      messageBox.style.color = type === "error" ? "#d33" : "#060";
+      messageBox.textContent = msg;
+      if (autoHide) {
+        setTimeout(() => (messageBox.textContent = ""), 3000);
+      }
+    }
+
+    function updateTitleCount() {
+      titleHeader.textContent = `WordVault [${entries.length}]`;
+    }
+
+    function updateStorageUsage() {
+      const used = new Blob([JSON.stringify(localStorage)]).size;
+      const kb = (used / 1024).toFixed(2);
+      const mb = (used / (1024 * 1024)).toFixed(2);
+      const max = 5;
+      document.getElementById("storageUsage").textContent = `[ ${kb} KB (${mb} MB) of ↝ ${max} MB ]`;
+    }
+    /* ==========================
+       Utilities (debounce, normalizers, sanitize, etc.)
+       ========================== */
+    function debounce(func, delay) {
+      let timeoutId;
+      return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    function normalizeSearch(str) {
+      return str.trim().replace(/\s+/g, " ").toLowerCase();
+    }
+
+    function sanitizeText(str) {
+      str = str.replace(/<\/?[^>]+(>|$)/g, "");
+      return str.replace(/[^a-zA-Z0-9 .,?!:;'"\-(){}\[\]\n\r@#\$%&|_\*\+\/=~]/g, "");
+    }
+
+    function sentenceCase(str) {
+      if (!str) return "";
+      str = str.replace(/\n+/g, "\n"); // remove multiple newlines first
+      return str
+        .trim()
+        .split("\n")
+        .map((line) => line.charAt(0).toUpperCase() + line.slice(1))
+        .join("\n");
+    }
+
+    function normalizeSpaces(str) {
+      return str
+        .split("\n")
+        .map((l) => l.trim().replace(/\s+/g, " "))
+        .join("\n");
+    }
+
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+    /* ==========================
+       Persistence (localStorage)
+       ========================== */
+    function saveEntries() {
+      try {
+        localStorage.setItem("entries", JSON.stringify(entries));
+        updateStorageUsage();
+      } catch (e) {
+        if (e.name === "QuotaExceededError" || e.code === 22) {
+          showMessage("Maximum storage reached! Please download your data or delete entries to free up space.", "error");
+        } else {
+          showMessage("Error saving data.", "error");
+        }
+      }
+    }
+    /* ==========================
+       Rendering helpers (highlight + renderEntries)
+       ========================== */
+    function highlight(text, q) {
+      if (!q) return text;
+      const safeQ = escapeRegex(q);
+      return text.replace(new RegExp(`(${safeQ})`, "gi"), (m) => `<mark>${m}</mark>`);
+    }
+
+    function renderEntries() {
+      outputArea.innerHTML = "";
+      const q = normalizeSearch(searchInput.value);
+      let list = entries.map((entry, i) => ({
+        entry,
+        i
+      })).filter(({
+        entry
+      }) => normalizeSearch(entry.title).includes(q));
+      if (list.length === 0) {
+        outputArea.innerHTML = '<div style="color:#ff416c;">No results found.</div>';
+        return;
+      }
+      list.forEach(({
+        entry,
+        i
+      }) => {
+        const div = document.createElement("div");
+        div.className = "output-item";
+        let html = `
+        <button class="delete-btn" data-index="${i}">&#10008;</button>
+        <button class="edit-btn" data-index="${i}">&#8617;</button>
+        <div class="word-title">${highlight(entry.title, q)}</div>
+      `;
+        if (entry.details.trim()) {
+          html += `
+          <div class="section-label">Meaning</div>
+          <div class="section-text">${entry.details.replace(/\n/g, "<br>")}</div>
+        `;
+        }
+        if (entry.examples.trim()) {
+          html += `
+          <div class="section-label">Examples</div>
+          <div class="section-text">${entry.examples.replace(/\n/g, "<br>")}</div>
+        `;
+        }
+        div.innerHTML = html;
+        outputArea.appendChild(div);
+      });
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.onclick = () => {
+          const index = Number(btn.dataset.index);
+          entries.splice(index, 1);
+          saveEntries();
+          renderEntries();
+          showMessage("Entry deleted.", "success");
+        };
+      });
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.onclick = () => {
+          editIndex = Number(btn.dataset.index);
+          const e = entries[editIndex];
+          inputField.value = e.title;
+          textAreaField.value = e.details;
+          examplesField.value = e.examples;
+          addButton.textContent = "Update Entry";
+        };
+      });
+      updateTitleCount();
+    }
+    /* ==========================
+       Add / Update logic (no changes)
+       ========================== */
+    function addOrUpdateEntry() {
+      let title = sentenceCase(sanitizeText(normalizeSpaces(inputField.value)));
+      let details = sentenceCase(sanitizeText(normalizeSpaces(textAreaField.value)));
+      let examples = sentenceCase(sanitizeText(normalizeSpaces(examplesField.value)));
+      if (!title) {
+        showMessage("Word is required.");
+        return;
+      }
+      if (editIndex !== null) {
+        entries[editIndex] = {
+          title,
+          details,
+          examples
+        };
+        editIndex = null;
+        addButton.textContent = "Add Entry";
+        showMessage("Entry updated.", "success");
+      } else {
+        if (entries.some((e) => e.title.toLowerCase() === title.toLowerCase())) {
+          showMessage(`"${title}" already exists.`);
+          return;
+        }
+        entries.unshift({
+          title,
+          details,
+          examples
+        });
+        showMessage("Entry added.", "success");
+      }
+      saveEntries();
+      inputField.value = textAreaField.value = examplesField.value = "";
+      inputField.focus();
+      renderEntries();
+    }
+    /* ==========================
+       Event bindings
+       ========================== */
+    addButton.onclick = addOrUpdateEntry;
+    inputField.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addOrUpdateEntry();
+      }
+    });
+
+    function updateClearBtn() {
+      if (searchInput.value.trim()) {
+        clearSearchBtn.classList.add("active");
+      } else {
+        clearSearchBtn.classList.remove("active");
+      }
+    }
+    const debouncedSearch = debounce(() => {
+      updateClearBtn();
+      renderEntries();
+    }, 300); // 300ms delay
+    searchInput.addEventListener("input", debouncedSearch);
+    clearSearchBtn.onclick = () => {
+      searchInput.value = "";
+      updateClearBtn();
+      renderEntries();
+    };
+    sortBtn.onclick = () => {
+      entries.sort((a, b) => (sortAsc ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)));
+      sortAsc = !sortAsc;
+      sortBtn.textContent = sortAsc ? "↑" : "↓";
+      renderEntries();
+      showMessage("Entries sorted.", "success");
+    };
+    downloadBtn.onclick = () => {
+      const blob = new Blob([JSON.stringify(entries, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "data.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showMessage("JSON downloaded.", "success");
+    };
+    uploadBtn.onclick = () => uploadInput.click();
+    uploadInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (Array.isArray(data)) {
+            data.forEach(({
+              title,
+              details,
+              examples
+            }) => {
+              if (!entries.some((e) => e.title.toLowerCase() === (title || "").toLowerCase())) {
+                entries.push({
+                  title: sentenceCase(sanitizeText(title || "")),
+                  details: sentenceCase(sanitizeText(details || "")),
+                  examples: sentenceCase(sanitizeText(examples || "")),
+                });
+              }
+            });
+            saveEntries();
+            renderEntries();
+            showMessage("Entries merged successfully!", "success");
+          } else showMessage("Invalid JSON format.");
+        } catch {
+          showMessage("Error parsing JSON.");
+        }
+      };
+      reader.readAsText(file);
+      uploadInput.value = "";
+    };
+    /* ==========================
+       Init
+       ========================== */
+    updateClearBtn();
+    renderEntries();
+    sortBtn.textContent = sortAsc ? "↑" : "↓";
+    updateStorageUsage();
+  </script>
+</body>
+</html>

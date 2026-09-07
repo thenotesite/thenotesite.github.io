@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="yt.png" />
+    <title>MAINS [HARSHAL SIR]</title>
+    <style>
+      @media print {
+        .noprint {
+          display: none;
+        }
+      }
+      .list {
+        text-align: center;
+      }
+      .list a {
+        text-decoration: none;
+        background: none;
+        border: 1px solid white;
+        padding: 10px 20px;
+        margin: 0 3px;
+        color: #ffebcd;
+        transition: 0.1s ease-in-out;
+      }
+      .list a:hover {
+        color: #fff;
+        background: #1fa1c0;
+        box-shadow: none;
+      }
+    </style>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Fira Code", monospace;
+        background: #0d1117;
+        color: #c9d1d9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 40px;
+        background: linear-gradient(90deg, #de4040, #1fa1c0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.075em;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+        justify-content: center;
+        width: 100%;
+        max-width: 1400px;
+      }
+
+      .videoCard {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease;
+        position: relative;
+      }
+
+      .videoCard:hover {
+        transform: translateY(-2px);
+        border-color: rgba(88, 166, 255, 0.3);
+        box-shadow: 0 12px 30px rgba(10, 20, 130, 0.75);
+      }
+
+      .thumbnail {
+        position: relative;
+      }
+
+      .thumbnail img {
+        width: 100%;
+        display: block;
+        height: auto;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .overlay {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(13, 17, 23, 0.75);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .numberBadge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(142, 24, 72, 0.75);
+        color: white;
+        font-weight: 700;
+        font-size: 0.85em;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      .info {
+        padding: 15px;
+      }
+
+      .meta {
+        color: #f0f6fc;
+        font-weight: 500;
+        font-size: 1em;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 20px 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>// MAINS [HARSHAL SIR]</h1>
+    <div class="noprint">
+      <p class="list">
+        <a href="KS.html">KS</a>
+        <a href="SS.html">SS</a>
+        <a href="HS.html">HS</a>
+      </p>
+    </div>
+    <br /><br />
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+      const videoData = `
+Thumbnail url,Duration,Uploaded Time,Video url
+https://i.ytimg.com/vi/CpcCkFbrD2g/maxresdefault.jpg,"3 Hours, 37 Minutes, 6 Seconds",2025-10-30T08:33:32,https://www.youtube.com/watch?v=CpcCkFbrD2g
+https://i.ytimg.com/vi/P1LexP_5sYw/maxresdefault.jpg,"2 Hours, 34 Minutes, 10 Seconds",2025-10-27T07:41:43,https://www.youtube.com/watch?v=P1LexP_5sYw
+https://i.ytimg.com/vi/ft5uOQ8P_Rk/maxresdefault.jpg,"3 Hours, 47 Minutes, 56 Seconds",2025-10-24T08:42:25,https://www.youtube.com/watch?v=ft5uOQ8P_Rk
+https://i.ytimg.com/vi/erF_oLDE4qQ/maxresdefault.jpg,"8 Hours, 20 Minutes, 10 Seconds",2025-10-06T13:25:31,https://www.youtube.com/watch?v=erF_oLDE4qQ
+https://i.ytimg.com/vi/VUv15VmIaRo/maxresdefault.jpg,"4 Hours, 2 Minutes, 43 Seconds",2025-09-25T09:41:58,https://www.youtube.com/watch?v=VUv15VmIaRo
+https://i.ytimg.com/vi/xrZ5q5JfO-s/maxresdefault.jpg,"4 Hours, 5 Minutes, 57 Seconds",2025-09-23T08:55:09,https://www.youtube.com/watch?v=xrZ5q5JfO-s
+https://i.ytimg.com/vi/dl7mCgtF6-M/maxresdefault.jpg,"2 Hours, 49 Minutes, 55 Seconds",2025-09-03T07:42:49,https://www.youtube.com/watch?v=dl7mCgtF6-M
+https://i.ytimg.com/vi/4-Ltko-UVWs/maxresdefault.jpg,"5 Hours, 48 Minutes, 24 Seconds",2025-09-01T10:51:03,https://www.youtube.com/watch?v=4-Ltko-UVWs
+https://i.ytimg.com/vi/42UHYx8NUwM/maxresdefault.jpg,"4 Hours, 19 Minutes, 23 Seconds",2025-08-26T09:15:42,https://www.youtube.com/watch?v=42UHYx8NUwM
+https://i.ytimg.com/vi/i69VAqDXJww/maxresdefault.jpg,"2 Hours, 15 Minutes, 16 Seconds",2025-07-17T07:13:51,https://www.youtube.com/watch?v=i69VAqDXJww
+https://i.ytimg.com/vi/cR9MzqDGoZA/maxresdefault.jpg,"2 Hours, 14 Minutes, 42 Seconds",2025-07-09T07:13:41,https://www.youtube.com/watch?v=cR9MzqDGoZA
+https://i.ytimg.com/vi/VyGmfXKSqcY/maxresdefault.jpg,"3 Hours, 18 Minutes, 12 Seconds",2025-07-05T08:18:52,https://www.youtube.com/watch?v=VyGmfXKSqcY
+https://i.ytimg.com/vi/0uYNioqB4DM/maxresdefault.jpg,"2 Hours, 44 Minutes, 17 Seconds",2025-07-04T07:41:31,https://www.youtube.com/watch?v=0uYNioqB4DM
+https://i.ytimg.com/vi/ngsHCRGtn1Q/maxresdefault.jpg,"2 Hours, 49 Minutes, 6 Seconds",2025-06-30T07:44:44,https://www.youtube.com/watch?v=ngsHCRGtn1Q
+https://i.ytimg.com/vi/5C8yb97qVXQ/maxresdefault.jpg,"2 Hours, 29 Minutes, 58 Seconds",2025-06-27T07:59:54,https://www.youtube.com/watch?v=5C8yb97qVXQ
+https://i.ytimg.com/vi/FWx5OM7OsXc/maxresdefault.jpg,"2 Hours, 47 Minutes, 3 Seconds",2025-06-25T07:44:32,https://www.youtube.com/watch?v=FWx5OM7OsXc
+https://i.ytimg.com/vi/Ug7wC3Zi4kQ/maxresdefault.jpg,"3 Hours, 1 Minutes, 53 Seconds",2025-06-20T08:53:49,https://www.youtube.com/watch?v=Ug7wC3Zi4kQ
+https://i.ytimg.com/vi/-chtUwVf6k0/maxresdefault.jpg,"2 Hours, 58 Minutes, 8 Seconds",2025-06-17T07:47:54,https://www.youtube.com/watch?v=-chtUwVf6k0
+https://i.ytimg.com/vi/nrGCCv3xM5w/maxresdefault.jpg,"2 Hours, 47 Minutes, 35 Seconds",2025-06-04T07:41:57,https://www.youtube.com/watch?v=nrGCCv3xM5w
+https://i.ytimg.com/vi/G7fYJwRFW_I/maxresdefault.jpg,"2 Hours, 30 Minutes, 48 Seconds",2025-05-31T07:28:35,https://www.youtube.com/watch?v=G7fYJwRFW_I
+https://i.ytimg.com/vi/rIVP_nP_h7A/maxresdefault.jpg,"2 Hours, 20 Minutes, 29 Seconds",2025-05-27T07:13:14,https://www.youtube.com/watch?v=rIVP_nP_h7A
+https://i.ytimg.com/vi/mMpHL6T5VJc/maxresdefault.jpg,"2 Hours, 2 Minutes, 44 Seconds",2025-05-21T06:58:08,https://www.youtube.com/watch?v=mMpHL6T5VJc
+https://i.ytimg.com/vi/3z9YvklMXUU/maxresdefault.jpg,"2 Hours, 4 Minutes, 40 Seconds",2025-05-16T06:55:53,https://www.youtube.com/watch?v=3z9YvklMXUU
+https://i.ytimg.com/vi/2i52mD6eOYY/maxresdefault.jpg,"1 Hours, 32 Minutes, 27 Seconds",2025-05-09T06:34:00,https://www.youtube.com/watch?v=2i52mD6eOYY
+https://i.ytimg.com/vi/8x2_89m4T8E/maxresdefault.jpg,"1 Hours, 59 Minutes, 40 Seconds",2025-04-14T06:59:04,https://www.youtube.com/watch?v=8x2_89m4T8E
+https://i.ytimg.com/vi/2OuzYvJUDo8/maxresdefault.jpg,"4 Hours, 1 Minutes, 58 Seconds",2025-04-08T18:55:45,https://www.youtube.com/watch?v=2OuzYvJUDo8
+https://i.ytimg.com/vi/ifiHrlnmNkc/maxresdefault.jpg,"3 Hours, 33 Minutes, 2 Seconds",2025-04-04T08:54:29,https://www.youtube.com/watch?v=ifiHrlnmNkc
+https://i.ytimg.com/vi/Y8DsPG-Us3E/maxresdefault.jpg,"1 Hours, 59 Minutes, 45 Seconds",2025-03-27T07:07:25,https://www.youtube.com/watch?v=Y8DsPG-Us3E
+https://i.ytimg.com/vi/BNtba13RF7Y/maxresdefault.jpg,"2 Hours, 36 Minutes, 22 Seconds",2025-03-25T07:23:49,https://www.youtube.com/watch?v=BNtba13RF7Y
+https://i.ytimg.com/vi/Jpl2vnpyv2A/maxresdefault.jpg,"2 Hours, 7 Minutes, 56 Seconds",2025-03-19T06:55:17,https://www.youtube.com/watch?v=Jpl2vnpyv2A
+https://i.ytimg.com/vi/9UccVxhtoKQ/maxresdefault.jpg,"3 Hours, 19 Minutes, 56 Seconds",2025-03-13T08:27:15,https://www.youtube.com/watch?v=9UccVxhtoKQ
+https://i.ytimg.com/vi/6KGAfnypmHE/maxresdefault.jpg,"2 Hours, 30 Minutes, 36 Seconds",2025-03-12T07:31:03,https://www.youtube.com/watch?v=6KGAfnypmHE
+https://i.ytimg.com/vi/_4Uz4Q5ZOS4/maxresdefault.jpg,"3 Hours, 28 Minutes, 51 Seconds",2025-03-10T08:37:42,https://www.youtube.com/watch?v=_4Uz4Q5ZOS4
+https://i.ytimg.com/vi/WW-PlWuLknU/maxresdefault.jpg,"2 Hours, 9 Minutes, 44 Seconds",2025-01-28T06:59:14,https://www.youtube.com/watch?v=WW-PlWuLknU
+https://i.ytimg.com/vi/pW3Xze_dtK4/maxresdefault.jpg,"1 Hours, 31 Minutes, 59 Seconds",2025-01-15T06:25:41,https://www.youtube.com/watch?v=pW3Xze_dtK4
+https://i.ytimg.com/vi/LGGh0DAhiqE/maxresdefault.jpg,"2 Hours, 3 Minutes, 44 Seconds",2025-01-09T06:53:16,https://www.youtube.com/watch?v=LGGh0DAhiqE
+https://i.ytimg.com/vi/F1YGywk61gU/maxresdefault.jpg,"1 Hours, 54 Minutes, 40 Seconds",2025-01-08T06:42:28,https://www.youtube.com/watch?v=F1YGywk61gU
+https://i.ytimg.com/vi/5ASX_7NQi_A/maxresdefault.jpg,"1 Hours, 48 Minutes, 4 Seconds",2025-01-07T06:43:50,https://www.youtube.com/watch?v=5ASX_7NQi_A
+https://i.ytimg.com/vi/dcPfmkXkOlw/maxresdefault.jpg,"2 Hours, 3 Minutes, 39 Seconds",2025-01-02T07:02:36,https://www.youtube.com/watch?v=dcPfmkXkOlw
+https://i.ytimg.com/vi/WoIOLPlr-fU/maxresdefault.jpg,"1 Hours, 28 Minutes, 35 Seconds",2024-12-23T06:21:26,https://www.youtube.com/watch?v=WoIOLPlr-fU
+https://i.ytimg.com/vi/32eXBgpcHeg/maxresdefault.jpg,"1 Hours, 56 Minutes, 13 Seconds",2024-12-13T07:01:02,https://www.youtube.com/watch?v=32eXBgpcHeg
+https://i.ytimg.com/vi/WJIe16CA8So/maxresdefault.jpg,"1 Hours, 43 Minutes, 26 Seconds",2024-12-09T06:45:41,https://www.youtube.com/watch?v=WJIe16CA8So
+https://i.ytimg.com/vi/CL8797QMPf4/maxresdefault.jpg,"2 Hours, 4 Minutes, 3 Seconds",2024-11-26T07:40:39,https://www.youtube.com/watch?v=CL8797QMPf4
+https://i.ytimg.com/vi/4uFn-Cq7ROM/maxresdefault.jpg,"1 Hours, 34 Minutes, 56 Seconds",2024-11-16T06:28:41,https://www.youtube.com/watch?v=4uFn-Cq7ROM
+https://i.ytimg.com/vi/e7ydULzSiQc/maxresdefault.jpg,"1 Hours, 43 Minutes, 38 Seconds",2024-11-07T06:40:50,https://www.youtube.com/watch?v=e7ydULzSiQc
+https://i.ytimg.com/vi/JYjPsC587nQ/maxresdefault.jpg,"1 Hours, 19 Minutes, 49 Seconds",2024-11-05T06:37:31,https://www.youtube.com/watch?v=JYjPsC587nQ
+https://i.ytimg.com/vi/qNrG8ehfPCs/maxresdefault.jpg,"1 Hours, 44 Minutes, 15 Seconds",2024-11-04T06:53:35,https://www.youtube.com/watch?v=qNrG8ehfPCs
+https://i.ytimg.com/vi/1PSEH91usRE/maxresdefault.jpg,"1 Hours, 59 Minutes, 52 Seconds",2024-10-29T06:58:34,https://www.youtube.com/watch?v=1PSEH91usRE
+https://i.ytimg.com/vi/-YpOCUpcUO4/maxresdefault.jpg,"2 Hours, 26 Minutes, 56 Seconds",2024-10-28T07:25:23,https://www.youtube.com/watch?v=-YpOCUpcUO4
+https://i.ytimg.com/vi/eeLmnHGdfgU/maxresdefault.jpg,"2 Hours, 10 Minutes, 45 Seconds",2024-10-25T07:24:23,https://www.youtube.com/watch?v=eeLmnHGdfgU
+https://i.ytimg.com/vi/iDO-UFqjAIY/maxresdefault.jpg,"2 Hours, 0 Minutes, 20 Seconds",2024-10-24T07:25:16,https://www.youtube.com/watch?v=iDO-UFqjAIY
+https://i.ytimg.com/vi/i0AsxV7wGIw/maxresdefault.jpg,"1 Hours, 59 Minutes, 5 Seconds",2024-10-22T07:11:43,https://www.youtube.com/watch?v=i0AsxV7wGIw
+https://i.ytimg.com/vi/0gm-EV2D_7E/sddefault.jpg,"2 Hours, 12 Minutes, 52 Seconds",2024-10-02T07:05:17,https://www.youtube.com/watch?v=0gm-EV2D_7E
+https://i.ytimg.com/vi/p-mqWWEeExw/maxresdefault.jpg,"1 Hours, 36 Minutes, 18 Seconds",2024-09-18T06:59:39,https://www.youtube.com/watch?v=p-mqWWEeExw
+https://i.ytimg.com/vi/Qg4BIfAR9ws/maxresdefault.jpg,"1 Hours, 44 Minutes, 0 Seconds",2024-09-10T06:36:22,https://www.youtube.com/watch?v=Qg4BIfAR9ws
+https://i.ytimg.com/vi/o0P8FS6qUWM/maxresdefault.jpg,"1 Hours, 44 Minutes, 55 Seconds",2024-09-03T06:53:09,https://www.youtube.com/watch?v=o0P8FS6qUWM
+https://i.ytimg.com/vi/0lzceFjkz7Y/maxresdefault.jpg,"1 Hours, 37 Minutes, 1 Seconds",2024-08-30T06:34:57,https://www.youtube.com/watch?v=0lzceFjkz7Y
+https://i.ytimg.com/vi/LCr_zWi3DGA/maxresdefault.jpg,"1 Hours, 38 Minutes, 52 Seconds",2024-08-29T06:33:51,https://www.youtube.com/watch?v=LCr_zWi3DGA
+https://i.ytimg.com/vi/43rmOLFqfT0/maxresdefault.jpg,"2 Hours, 6 Minutes, 55 Seconds",2024-08-27T06:56:35,https://www.youtube.com/watch?v=43rmOLFqfT0
+https://i.ytimg.com/vi/BORCG8JtAMA/maxresdefault.jpg,"2 Hours, 19 Minutes, 11 Seconds",2024-08-26T07:47:33,https://www.youtube.com/watch?v=BORCG8JtAMA
+https://i.ytimg.com/vi/UXhOhcJgoc8/maxresdefault.jpg,"1 Hours, 23 Minutes, 30 Seconds",2024-08-22T07:19:31,https://www.youtube.com/watch?v=UXhOhcJgoc8
+https://i.ytimg.com/vi/duW0iK5qK5k/maxresdefault.jpg,"1 Hours, 41 Minutes, 15 Seconds",2024-08-14T06:31:36,https://www.youtube.com/watch?v=duW0iK5qK5k
+https://i.ytimg.com/vi/rQfAHUtysG0/maxresdefault.jpg,"1 Hours, 38 Minutes, 41 Seconds",2024-08-13T06:29:46,https://www.youtube.com/watch?v=rQfAHUtysG0
+https://i.ytimg.com/vi/8sYMVx7UVWc/maxresdefault.jpg,"1 Hours, 40 Minutes, 9 Seconds",2024-08-08T06:37:57,https://www.youtube.com/watch?v=8sYMVx7UVWc
+https://i.ytimg.com/vi/YxQnget9Eo0/maxresdefault.jpg,"1 Hours, 27 Minutes, 3 Seconds",2024-08-06T06:55:50,https://www.youtube.com/watch?v=YxQnget9Eo0
+`;
+
+      function parseCSVLine(line) {
+        const regex = /("(?:[^"]|"")*"|[^,]*)(,|$)/g;
+        const fields = [];
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+          let val = match[1];
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.slice(1, -1).replace(/""/g, '"');
+          }
+          fields.push(val.trim());
+          if (match[2] === "") break;
+        }
+        return fields;
+      }
+
+      function formatDuration(str) {
+        if (!str) return "";
+        const clean = str.trim();
+        const hMatch = clean.match(/(\d+)\s*Hours?/i);
+        const mMatch = clean.match(/(\d+)\s*Minutes?/i);
+        const sMatch = clean.match(/(\d+)\s*Seconds?/i);
+        const h = hMatch ? Number(hMatch[1]) : 0;
+        const m = mMatch ? Number(mMatch[1]) : 0;
+        const s = sMatch ? Number(sMatch[1]) : 0;
+        const pad = (n) => String(n).padStart(2, "0");
+        return h === 0 ? `${pad(m)}:${pad(s)}` : `${h}:${pad(m)}:${pad(s)}`;
+      }
+
+      function isoToDateObject(iso) {
+        if (!iso) return null;
+        const hasOffset = /Z|[+\-]\d{2}:\d{2}$/.test(iso);
+        const normalized = hasOffset ? iso : iso + "Z";
+        const d = new Date(normalized);
+        return isNaN(d) ? null : d;
+      }
+
+      function formatDate(iso) {
+        const d = isoToDateObject(iso);
+        if (!d) return iso;
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        const month = d.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
+        const year = d.getUTCFullYear();
+        return `${day} ${month} ${year}`;
+      }
+
+      function generateGallery() {
+        const lines = videoData
+          .trim()
+          .split("\n")
+          .filter((l) => l && !l.toLowerCase().startsWith("thumbnail"))
+          .map(parseCSVLine);
+
+        const total = lines.length;
+        const gallery = document.getElementById("gallery");
+        gallery.innerHTML = "";
+
+        lines.forEach(([thumb, duration, uploaded, url], index) => {
+          const videoNumber = total - index; // reverse numbering
+          const time = formatDuration(duration || "");
+          const date = formatDate(uploaded || "");
+
+          const card = document.createElement("div");
+          card.className = "videoCard";
+          card.innerHTML = `
+            <a href="${url}" target="_blank">
+              <div class="thumbnail">
+                <img loading="lazy" src="${thumb}">
+                <div class="numberBadge">#${videoNumber}</div>
+                <div class="overlay">${time}</div>
+              </div>
+              <div class="info">
+                <div class="meta">${date}</div>
+              </div>
+            </a>
+          `;
+          gallery.appendChild(card);
+        });
+      }
+
+      generateGallery();
+    </script>
+  </body>
+</html>

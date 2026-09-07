@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+    />
+
+    <link rel="icon" type="image/png" href="lib/icon/podcast.png" />
+
+    <!-- Premium Editorial Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Podcast</title>
+
+    <style>
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      :root {
+        --bg-color: #faf5f0;
+        --text-color: #111;
+        --shadow-default: 0 6px 20px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        padding: 2rem 1rem;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* ================================
+         PREMIUM EDITORIAL HEADING
+         ================================ */
+
+      h1 {
+        text-align: center;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(3.5rem, 8vw, 6.5rem);
+        font-weight: 600;
+        line-height: 0.85;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+
+        color: #171717;
+
+        margin-bottom: 3.5rem;
+
+        user-select: none;
+
+        text-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.9),
+          0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Elegant divider underneath the title */
+
+      h1::after {
+        content: "";
+        display: block;
+        width: 70px;
+        height: 1px;
+        background: #171717;
+        margin: 1.5rem auto 0;
+        opacity: 0.55;
+      }
+
+      /* ================================
+         PODCAST GRID
+         ================================ */
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(320px, 1fr)
+        );
+        gap: 2.5rem;
+      }
+
+      .card {
+        background: #fff;
+        box-shadow: var(--shadow-default);
+        overflow: hidden;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      iframe {
+        width: 100%;
+        height: 450px;
+        border: none;
+        display: block;
+        overflow: hidden;
+      }
+
+      /* ================================
+         FOOTER
+         ================================ */
+
+      .footer {
+        text-align: center;
+        margin-top: 4rem;
+        color: #777;
+        font-size: 0.9rem;
+        letter-spacing: 0.04em;
+      }
+
+      /* ================================
+         MOBILE
+         ================================ */
+
+      @media (max-width: 480px) {
+        body {
+          padding: 1.5rem 0.75rem;
+        }
+
+        h1 {
+          font-size: clamp(3rem, 16vw, 4.5rem);
+          letter-spacing: 0.08em;
+          margin-bottom: 3rem;
+        }
+
+        h1::after {
+          margin-top: 1.25rem;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        iframe {
+          height: 350px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Top Podcasts</h1>
+
+      <div class="grid">
+        <!-- InFocus -->
+        <div class="card">
+          <iframe
+            title="InFocus"
+            src="https://playlist.megaphone.fm/?p=THGU4956605070&light=true"
+          ></iframe>
+        </div>
+
+        <!-- BusinessLine -->
+        <div class="card">
+          <iframe
+            title="BusinessLine"
+            src="https://playlist.megaphone.fm/?p=THGU7512375069&light=true"
+          ></iframe>
+        </div>
+
+        <!-- 3 Things -->
+        <div class="card">
+          <iframe
+            title="3 Things"
+            src="https://widget.spreaker.com/player?show_id=5008053&theme=light&color=ff0000&playlist=show&playlist-continuous=true&chapters-image=true&episode_image_position=right&hide-likes=true&hide-comments=true&hide-sharing=true&hide-logo=true&hide-download=true"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="footer">
+        © MANDIP. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

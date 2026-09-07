@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Widgets</title>
+    <meta name="theme-color" content="#2d004d" />
+    <link rel="icon" type="image/png" href="lib/icon/alarm.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comforter&family=Nunito+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Nunito Sans", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: linear-gradient(135deg, #d16ba5, #86a8e7, #5ffbf1);
+        color: #fff;
+        text-align: center;
+        padding: 2rem 1rem 3rem;
+        letter-spacing: 0.3px;
+        user-select: none !important;
+      }
+
+      h1 {
+        font-family: "Comforter", cursive;
+        font-size: 3.5rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        letter-spacing: 2px;
+        background-image: linear-gradient(to right bottom, #fefefe, #e7ecff, #c2ddff, #8ad2ff, #00c8ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        width: 90%;
+        max-width: 1300px;
+      }
+
+      @media (max-width: 1024px) {
+        .grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .countdown-widget {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 18px;
+        backdrop-filter: blur(12px);
+        padding: 28px;
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      .countdown-widget:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+
+      .countdown-widget h3 {
+        font-family: "Poppins", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      .countdown-widget p {
+        font-size: 1.1rem;
+        margin-bottom: 14px;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+
+      .countdown {
+        font-family: "Poppins", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(to right, #ffffff, #a8e0ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>EXAM DATES [RRB & IBPS]</h1>
+
+    <div class="grid">
+      <div class="countdown-widget" data-date="2026-08-22">
+        <h3>IBPS PO PRE</h3>
+        <p>22,23 AUG, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-10-04">
+        <h3>IBPS PO MAINS</h3>
+        <p>4 OCT, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-10-10">
+        <h3>IBPS CLERK PRE</h3>
+        <p>10,11 OCT, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-11-21">
+        <h3>RRB PO PRE</h3>
+        <p>21,22 NOV, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-12-06">
+        <h3>RRB CLERK PRE</h3>
+        <p>6,12,13 DEC, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-12-20">
+        <h3>RRB PO MAINS</h3>
+        <p>20 DEC, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2026-12-27">
+        <h3>IBPS CLERK MAINS</h3>
+        <p>27 DEC, 2026</p>
+        <div class="countdown">Loading...</div>
+      </div>
+
+      <div class="countdown-widget" data-date="2027-01-30">
+        <h3>RRB CLERK MAINS</h3>
+        <p>30 JAN, 2027</p>
+        <div class="countdown">Loading...</div>
+      </div>
+    </div>
+
+    <script>
+      function updateCountdowns() {
+        const now = new Date(); // local time
+
+        document.querySelectorAll(".countdown-widget").forEach((widget) => {
+          const target = new Date(widget.dataset.date + "T00:00:00+05:30");
+
+          const diff = target - now;
+          const countdown = widget.querySelector(".countdown");
+
+          if (diff <= 0) {
+            countdown.textContent = "Exam Day!";
+            return;
+          }
+
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          const mins = Math.floor((diff / (1000 * 60)) % 60);
+
+          countdown.textContent = `${days}d ${hours}h ${mins}m`;
+        });
+      }
+
+      updateCountdowns();
+      setInterval(updateCountdowns, 60000); // update every minute
+    </script>
+  </body>
+</html>

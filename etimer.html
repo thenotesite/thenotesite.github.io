@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="icon" type="image/png" href="lib/icon/etime.png" />
+    <meta name="theme-color" content="#2d004d" />
+    <title>Stopwatch</title>
+    <style>
+      body {
+        margin: auto;
+        font-family: "Fira Code", monospace;
+        background: #0d1117;
+        color: #c9d1d9;
+        padding: 20px;
+        box-sizing: border-box;
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 20px 20px;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        min-width: 280px;
+        max-width: 500px;
+        box-sizing: border-box;
+      }
+
+      #display {
+        font-size: 1.5rem;
+        margin: 10px 0px 20px 0px;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid rgb(55 80 95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgb(0 165 235 / 15%);
+        transition: all 0.3s ease-in-out;
+        text-align: center;
+        animation: float 4s ease-in-out infinite;
+      }
+
+      #display.running {
+        box-shadow: 0 0 25px rgb(220 15 15 / 30%);
+        border-color: rgb(205 30 30 / 40%);
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .buttons button {
+        position: relative;
+        padding: 12px;
+        outline: none;
+        background: rgba(10, 10, 20, 0.7);
+        color: #ffe8f6;
+        border: 1px solid rgba(255, 0, 120, 0.3);
+        border-radius: 10px;
+        cursor: pointer;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+        box-shadow: 0 0 0 transparent;
+        z-index: 0;
+        flex-grow: 1;
+        max-width: 50%;
+      }
+
+      .buttons button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 300%;
+        height: 100%;
+        background: linear-gradient(120deg, rgba(255, 0, 120, 0.25), rgba(0, 102, 255, 0.3), rgba(255, 40, 40, 0.25));
+        transform: skewX(-25deg);
+        transition: 0.5s ease;
+        z-index: -1;
+      }
+
+      .buttons button:hover::before {
+        left: 150%;
+      }
+
+      .buttons button:hover {
+        border-color: #ff3366;
+        color: #ffffff;
+        box-shadow:
+          0 0 8px rgba(255, 0, 120, 0.4),
+          0 0 20px rgba(0, 102, 255, 0.25),
+          inset 0 0 8px rgba(255, 50, 50, 0.1);
+      }
+
+      .buttons button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        border-color: rgba(255, 255, 255, 0.05);
+        box-shadow: none;
+      }
+
+      ul#laps {
+        scrollbar-width: thin;
+        scrollbar-color: #68686891 transparent;
+      }
+
+      ul#laps::-webkit-scrollbar {
+        width: 7px;
+      }
+
+      ul#laps::-webkit-scrollbar-thumb {
+        background: #68686891;
+        border-radius: 5px;
+      }
+      ul#laps {
+        list-style: none;
+        padding: 0 5px 0 0;
+        width: 100%;
+        max-height: 175px;
+        overflow-y: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      ul#laps li {
+        background: rgba(25, 25, 30, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 6px 0;
+        font-size: 0.85rem;
+        color: #8b949e;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transform: translateY(5px);
+        animation: fadeInLap 0.4s ease forwards;
+      }
+
+      @keyframes fadeInLap {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      ul#laps li:hover {
+        background: #292929;
+        border-color: pink;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="display">00:00:00.000</div>
+      <div class="buttons">
+        <button id="startPauseBtn"><i class="fa-solid fa-play"></i></button>
+        <button id="lapBtn" disabled><i class="fa-solid fa-flag"></i></button>
+        <button id="resetBtn" disabled><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+      <ul id="laps"></ul>
+    </div>
+    <script>
+      let startTime;
+      let running = false;
+      let elapsed = 0;
+      let laps = [];
+      let animationFrameId;
+      const display = document.getElementById("display");
+      const startPauseBtn = document.getElementById("startPauseBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const lapBtn = document.getElementById("lapBtn");
+      const lapsList = document.getElementById("laps");
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      function resumeAudioContext() {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+      }
+      document.addEventListener("click", resumeAudioContext, {
+        once: true,
+      });
+
+      function playSound(freq = 440, duration = 120, type = "sine", volume = 0.1) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.type = type;
+        gain.gain.value = volume;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration / 1000);
+      }
+      const sounds = {
+        start: () => {
+          playSound(800, 100, "triangle");
+          playSound(1200, 100, "triangle");
+        },
+        pause: () => {
+          playSound(600, 150, "sine");
+        },
+        lap: () => {
+          playSound(1000, 80, "square", 0.08);
+        },
+        reset: () => {
+          playSound(400, 200, "sawtooth", 0.08);
+        },
+      };
+
+      function formatTime(ms) {
+        const hours = Math.floor(ms / 3600000);
+        const minutes = Math.floor((ms % 3600000) / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        const millis = Math.floor(ms % 1000);
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}.${String(millis).padStart(3, "0")}`;
+      }
+
+      function updateDisplay() {
+        const diff = elapsed + (running ? performance.now() - startTime : 0);
+        display.textContent = formatTime(diff);
+      }
+
+      function updateButtonLabel() {
+        if (running) {
+          startPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          startPauseBtn.title = "Pause";
+        } else if (elapsed > 0) {
+          startPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+          startPauseBtn.title = "Resume";
+        } else {
+          startPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+          startPauseBtn.title = "Start";
+        }
+      }
+
+      function tick() {
+        if (running) {
+          updateDisplay();
+          animationFrameId = requestAnimationFrame(tick);
+        }
+      }
+
+      function startTimer(fromLoad = false) {
+        startTime = performance.now();
+        running = true;
+        updateButtonLabel();
+        display.classList.add("running");
+        resetBtn.disabled = false;
+        lapBtn.disabled = false;
+        if (!fromLoad) sounds.start();
+        tick();
+      }
+
+      function pauseTimer() {
+        running = false;
+        elapsed += performance.now() - startTime;
+        updateButtonLabel();
+        display.classList.remove("running");
+        cancelAnimationFrame(animationFrameId);
+        sounds.pause();
+        saveState();
+      }
+
+      function resetTimer() {
+        cancelAnimationFrame(animationFrameId);
+        running = false;
+        elapsed = 0;
+        laps = [];
+        updateDisplay();
+        lapsList.innerHTML = "";
+        display.classList.remove("running");
+        resetBtn.disabled = true;
+        lapBtn.disabled = true;
+        updateButtonLabel();
+        sounds.reset();
+        saveState();
+      }
+
+      function addLap() {
+        const now = elapsed + (running ? performance.now() - startTime : 0);
+        laps.unshift(now);
+        const li = document.createElement("li");
+        const previousLap = laps[1] || 0;
+        const lapDiff = now - previousLap;
+        li.innerHTML = `
+    <span style="color:#c9d1d9;">${laps.length} - </span>
+    <span style="color:#58a6ff;"> ${formatTime(now)}</span>
+    <span style="color:#8b949e;"> [+${formatTime(lapDiff)}]</span>
+  `;
+        lapsList.insertBefore(li, lapsList.firstChild);
+        lapsList.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        sounds.lap();
+        saveState();
+      }
+
+      function saveState() {
+        const data = {
+          elapsed: running ? elapsed + (performance.now() - startTime) : elapsed,
+          running,
+          laps,
+          lastSaved: Date.now(),
+        };
+        localStorage.setItem("stopwatchState", JSON.stringify(data));
+      }
+
+      function loadState() {
+        const data = JSON.parse(localStorage.getItem("stopwatchState") || "{}");
+        if (!data.elapsed) {
+          updateDisplay();
+          updateButtonLabel();
+          return;
+        }
+        elapsed = data.elapsed;
+        laps = data.laps || [];
+        if (data.running && data.lastSaved) {
+          const timeSinceClose = Date.now() - data.lastSaved;
+          elapsed += timeSinceClose;
+          startTimer(true);
+        } else {
+          updateDisplay();
+        }
+        renderLaps();
+        updateButtonLabel();
+      }
+
+      function renderLaps() {
+        lapsList.innerHTML = "";
+        laps.forEach((lap, i) => {
+          const li = document.createElement("li");
+          const previousLap = laps[i + 1] || 0;
+          const lapDiff = lap - previousLap;
+          li.innerHTML = `
+      <span style="color:#c9d1d9;">${laps.length - i} - </span>
+      <span style="color:#58a6ff;"> ${formatTime(lap)}</span>
+      <span style="color:#8b949e;"> [+${formatTime(lapDiff)}]</span>
+    `;
+          lapsList.appendChild(li);
+        });
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+          startPauseBtn.click();
+        } else if (e.key.toLowerCase() === "l") {
+          if (!lapBtn.disabled) lapBtn.click();
+        } else if (e.key.toLowerCase() === "r") {
+          if (!resetBtn.disabled) resetBtn.click();
+        }
+      });
+      startPauseBtn.addEventListener("click", () => {
+        if (!running) startTimer();
+        else pauseTimer();
+        saveState();
+      });
+      resetBtn.addEventListener("click", resetTimer);
+      lapBtn.addEventListener("click", addLap);
+      window.addEventListener("beforeunload", saveState);
+      loadState();
+    </script>
+  </body>
+</html>

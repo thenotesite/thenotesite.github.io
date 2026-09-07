@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="quiz.png" rel="icon" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet" />
+  <title>Meaning → Word Quiz</title>
+  <style>
+    #shortcutBox {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+    }
+
+    #shortcutToggle {
+      color: black;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    #shortcutToggle span {
+      visibility: hidden;
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      background: black;
+      box-shadow: 0 1em 2em -0.5em rgb(203 15 15 / 35%);
+      color: #fff;
+      padding: 10px;
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+
+    #shortcutToggle:hover span {
+      visibility: visible;
+    }
+  </style>
+  <style>
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      font-family: "Patrick Hand", cursive;
+      background: linear-gradient(90deg, #eeeef5, #fff7f2);
+      color: #333;
+      margin: 0;
+      padding: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    a {
+      text-decoration: none;
+      color: #49c5b6;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 1em 2em -0.5em rgb(200 15 15 / 10%);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 40px;
+      margin: 20px;
+      margin-bottom: 40px;
+      color: #222;
+    }
+
+    #jsonFile {
+      font-family: "Patrick Hand", cursive;
+      font-size: 17px;
+      padding: 20px;
+      border: 2px dashed #292929;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.75);
+      width: 100%;
+    }
+
+    input::file-selector-button {
+      color: #000;
+      font-family: "Patrick Hand", cursive;
+      background: linear-gradient(135deg, pink, white);
+      padding: 7px;
+      border: 1px solid #292929;
+      cursor: pointer;
+      border-radius: 10px;
+      margin-right: 10px;
+    }
+
+    input::file-selector-button:hover {
+      background: linear-gradient(135deg, white, pink);
+    }
+
+    #questionCountDiv {
+      font-size: 1.15rem;
+    }
+
+    #numQuestions {
+      padding: 7px;
+      margin: 0 10px 0 0;
+      font-size: 1.15rem;
+      border: 1px solid #666;
+      border-radius: 10px;
+      background: #fff;
+      width: 150px;
+      font-family: "Patrick Hand", cursive;
+      box-shadow: 0 1em 2em -0.5em rgb(200 15 15 / 15%);
+    }
+
+    #numQuestions:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    #question {
+      font-size: 1.25rem;
+      padding: 10px;
+      border: 2px dashed #ddd;
+      border-radius: 10px;
+      box-shadow: 0 1em 2em 0.5em rgb(200 15 15 / 10%);
+    }
+
+    #options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .option {
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 1.15rem;
+      cursor: pointer;
+      text-align: left;
+      background: #fff;
+      border: 1px solid #666;
+    }
+
+    .option:hover:enabled {
+      box-shadow: 0 1em 2em -0.5em rgb(200 15 15 / 20%);
+    }
+
+    .option.correct {
+      border-color: #2d8a4d;
+      background: linear-gradient(135deg, #d4edda, #e8f5e9);
+      color: #1b5e20;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(45, 138, 77, 0.2);
+    }
+
+    .option.wrong {
+      border-color: #b91c1c;
+      background: linear-gradient(135deg, #f8d7da, #fdecec);
+      color: #7f1d1d;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(185, 28, 28, 0.2);
+    }
+
+    button {
+      font-family: "Patrick Hand", cursive;
+      font-size: 1.15rem;
+      padding: 7px 15px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .explanation-toggle {
+      margin: 20px 10px 20px 0;
+      border-color: #333399;
+      color: #fff;
+      background: linear-gradient(135deg, #333399, white);
+    }
+
+    .explanation-toggle:hover {
+      background: linear-gradient(135deg, white, #333399);
+    }
+
+    #startBtn {
+      margin: 20px 0;
+      border-color: #009999;
+      color: #fff;
+      background: linear-gradient(135deg, #009999, white);
+    }
+
+    #startBtn:hover {
+      background: linear-gradient(135deg, white, #009999);
+    }
+
+    #nextBtn {
+      margin: 20px 0;
+      border-color: #006652;
+      color: #fff;
+      background: linear-gradient(135deg, #006652, white);
+    }
+
+    #nextBtn:hover {
+      background: linear-gradient(135deg, white, #006652);
+    }
+
+    .explanation {
+      margin: 0;
+      font-size: 1.15rem;
+      color: #333;
+      border: 2px dashed #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      display: none;
+      box-shadow: 0 1em 2em 0.5em rgb(200 15 15 / 10%);
+    }
+
+    @media (max-width: 500px) {
+      #options {
+        grid-template-columns: 1fr;
+      }
+
+      #shortcutBox {
+        display: none;
+      }
+    }
+
+    #progressContainer {
+      width: 100%;
+      max-width: 600px;
+      height: 5px;
+      background: #eee;
+      margin: 15px 0 25px 0;
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #06beb6, #48b1bf);
+      transition: width 0.3s ease;
+    }
+
+    .result-card {
+      width: 350px;
+      border-radius: 20px;
+      padding: 35px 25px;
+      text-align: center;
+      color: #333;
+      margin: 30px auto;
+      font-family: "Patrick Hand", cursive;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px dashed #292929;
+      box-shadow: 0 1em 2em -0.5em rgba(200, 15, 15, 0.15);
+      animation: fadeInUp 0.7s ease;
+    }
+
+    .result-badge {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      border: 2px dashed #292929;
+    }
+
+    .result-card.pass {
+      background: linear-gradient(135deg, #e8fff3, #ffffff);
+      border: 2px dashed #2d8a4d;
+    }
+
+    .result-card.pass .result-badge {
+      background: linear-gradient(135deg, #d4edda, #e8f5e9);
+      color: #1b5e20;
+    }
+
+    .result-card.fail {
+      background: linear-gradient(135deg, #fff5f5, #ffffff);
+      border: 2px dashed #b91c1c;
+    }
+
+    .result-card.fail .result-badge {
+      background: linear-gradient(135deg, #f8d7da, #fdecec);
+      color: #7f1d1d;
+    }
+
+    .result-card h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .result-card p {
+      font-size: 1.5rem;
+      margin: 0 0 25px;
+      color: #555;
+    }
+
+    .restart-btn {
+      background: linear-gradient(135deg, white, #0a5e86);
+      border: 1px solid #0a5e86;
+      padding: 10px 25px;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: "Patrick Hand", cursive;
+    }
+
+    .restart-btn:hover {
+      background: linear-gradient(135deg, #0a5e86, white);
+      transform: translateY(-2px) scale(1);
+      box-shadow: 0 5px 15px rgba(200, 15, 15, 0.3);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="shortcutBox">
+    <div id="shortcutToggle">
+      ⓘ
+      <span>
+        Defult Json File → <a href="data.json">data.json</a>
+        <br />
+        Key <b style="color: red;">1, 2, 3, 4</b> → Select the Option
+        <br />
+        Key <b style="color: red;">Enter</b> → Go to Next Question
+        <br />
+        Key <b style="color: red;">0</b> → Restart Quiz
+        <br />
+        Key <b style="color: red;">5</b> → Toggle Examples
+      </span>
+    </div>
+  </div>
+  <div class="container">
+    <h2>Meaning → Word Quiz</h2>
+
+    <div id="fileUploadDiv">
+      <input type="file" id="jsonFile" accept=".json" />
+      <p id="fileError" style="color: red; font-size: 1rem;"></p>
+    </div>
+
+    <div id="questionCountDiv" style="display: none;">
+      <p>Available questions in JSON - [<span id="totalQuestions"></span>]</p>
+      <label>How many questions do you want?</label>
+      <div>
+        <input type="number" id="numQuestions" min="1" />
+        <button id="startBtn">Start Quiz</button>
+      </div>
+      <p id="messageBox" style="color: red; font-size: 1rem; margin: 0;"></p>
+    </div>
+
+    <div id="quizContainer" style="display: none;">
+      <div id="progressContainer">
+        <div id="progressBar"></div>
+      </div>
+
+      <p id="question"></p>
+      <div id="options"></div>
+      <button id="explanationToggle" class="explanation-toggle" style="display: none;">Show Examples</button>
+      <p class="explanation" id="explanation"></p>
+      <button id="nextBtn" style="display: none;">Next Question</button>
+    </div>
+  </div>
+
+  <script>
+    let quiz, ui;
+    document.addEventListener("keydown", (e) => {
+      if (typeof ui === "undefined" || typeof quiz === "undefined") return;
+      if (["1", "2", "3", "4"].includes(e.key)) {
+        const index = parseInt(e.key) - 1;
+        if (ui.optionButtons[index] && !ui.optionButtons[index].disabled) {
+          ui.optionButtons[index].click();
+        }
+      }
+      if (e.key === "Enter") {
+        if (ui && ui.nextBtn && !ui.nextBtn.disabled && ui.nextBtn.style.display !== "none") {
+          ui.nextBtn.click();
+        }
+      }
+      if (e.key === "0") {
+        const restartBtnCard = document.getElementById("restartBtnCard");
+        if (restartBtnCard) restartBtnCard.click();
+      }
+      if (e.key === "5") {
+        if (ui && ui.expToggle && ui.expToggle.style.display !== "none") {
+          ui.expToggle.click();
+        }
+      }
+    });
+  </script>
+
+  <script>
+    class Quiz {
+      constructor(data) {
+        this.data = data;
+        this.currentIndex = 0;
+        this.score = 0;
+        this.selectedQuestions = [];
+      }
+      start(count) {
+        this.currentIndex = 0;
+        this.score = 0;
+        this.selectedQuestions = this.shuffle(this.data).slice(0, count);
+      }
+      get currentQuestion() {
+        return this.selectedQuestions[this.currentIndex];
+      }
+      next() {
+        this.currentIndex++;
+        return this.currentIndex < this.selectedQuestions.length;
+      }
+      shuffle(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+      generateOptions(q) {
+        const correct = q.title;
+        const optionsSet = new Set([correct]);
+        while (optionsSet.size < Math.min(4, this.data.length)) {
+          const random = this.data[Math.floor(Math.random() * this.data.length)];
+          optionsSet.add(random.title);
+        }
+        return {
+          correct,
+          options: this.shuffle([...optionsSet]),
+        };
+      }
+    }
+    class QuizUI {
+      constructor(quiz) {
+        this.quiz = quiz;
+        this.optionButtons = [];
+        this.qEl = document.getElementById("question");
+        this.optEl = document.getElementById("options");
+        this.expEl = document.getElementById("explanation");
+        this.expToggle = document.getElementById("explanationToggle");
+        this.nextBtn = document.getElementById("nextBtn");
+      }
+      showQuestion() {
+        const q = this.quiz.currentQuestion;
+        const questionText = "- " + q.details.replace(/\n/g, "<br>- ");
+        const {
+          correct,
+          options
+        } = this.quiz.generateOptions(q);
+        this.qEl.style.display = "block";
+        this.optEl.style.display = "grid";
+        this.qEl.innerHTML = `<strong>Q [${this.quiz.currentIndex + 1}/${this.quiz.selectedQuestions.length}]</strong><br>${questionText}`;
+        this.optEl.innerHTML = "";
+        this.optionButtons = [];
+        options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.textContent = opt;
+          btn.classList.add("option");
+          btn.onclick = () => this.checkAnswer(opt, correct, q.examples);
+          this.optEl.appendChild(btn);
+          this.optionButtons.push(btn);
+        });
+        this.expEl.style.display = "none";
+        this.expEl.textContent = "";
+        this.expToggle.style.display = "none";
+        this.expToggle.textContent = "Show Examples";
+        if (this.quiz.currentIndex === this.quiz.selectedQuestions.length - 1) {
+          this.nextBtn.textContent = "Submit";
+        } else {
+          this.nextBtn.textContent = "Next Question";
+        }
+        this.nextBtn.style.display = "inline-block";
+        this.nextBtn.disabled = true;
+        document.querySelector(".container").scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        const progress = ((this.quiz.currentIndex + 1) / this.quiz.selectedQuestions.length) * 100;
+        document.getElementById("progressBar").style.width = progress + "%";
+      }
+      checkAnswer(selected, correct, examples) {
+        if (!this.optionButtons.length || this.optionButtons[0].disabled) return;
+        this.optionButtons.forEach((btn) => {
+          btn.disabled = true;
+          const txt = btn.textContent;
+          if (txt === correct) btn.classList.add("correct");
+          if (txt === selected && selected !== correct) btn.classList.add("wrong");
+        });
+        if (selected === correct) {
+          this.quiz.score++;
+        }
+        if (examples && examples.trim() !== "") {
+          this.expEl.innerHTML = `<strong>Examples</strong><br>- ${examples.replace(/\n/g, "<br>- ")}`;
+          this.expToggle.style.display = "inline-block";
+          if (selected !== correct) {
+            this.expEl.style.display = "block";
+            this.expToggle.textContent = "Hide Examples";
+            this.expEl.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+          } else {
+            this.expEl.style.display = "none";
+            this.expToggle.textContent = "Show Examples";
+          }
+          this.expToggle.onclick = () => {
+            const isHidden = this.expEl.style.display === "none";
+            this.expEl.style.display = isHidden ? "block" : "none";
+            this.expToggle.textContent = isHidden ? "Hide Examples" : "Show Examples";
+          };
+        }
+        this.nextBtn.disabled = false;
+      }
+      showCompletion() {
+        const total = this.quiz.selectedQuestions.length;
+        const score = this.quiz.score;
+        const percentage = (score / total) * 100;
+        this.qEl.style.display = "none";
+        this.optEl.style.display = "none";
+        this.expEl.style.display = "none";
+        this.expToggle.style.display = "none";
+        this.nextBtn.style.display = "none";
+        document.getElementById("progressContainer").style.display = "none";
+        const card = document.createElement("div");
+        card.className = "result-card " + (percentage >= 70 ? "pass" : "fail");
+        card.innerHTML = `
+          <div class="result-badge">${percentage >= 70 ? "🌸" : "🍂"}</div>
+<h2>Final Score: ${score} / ${total}</h2>
+
+            <p>${percentage >= 70 ? `Great job! You passed with <b>${percentage.toFixed(0)}%</b>` : `You scored <b>${percentage.toFixed(0)}%</b>. Keep practicing!`}</p>
+            <button id="restartBtnCard" class="restart-btn">Restart Quiz</button>
+          `;
+        const container = document.querySelector(".container");
+        container.appendChild(card);
+        document.getElementById("restartBtnCard").onclick = () => {
+          card.remove();
+          document.getElementById("quizContainer").style.display = "none";
+          document.getElementById("questionCountDiv").style.display = "block";
+          document.getElementById("numQuestions").value = "";
+          document.getElementById("question").textContent = "";
+          document.getElementById("options").innerHTML = "";
+          document.getElementById("explanation").textContent = "";
+          document.getElementById("progressContainer").style.display = "block";
+          document.getElementById("progressBar").style.width = "0%";
+        };
+      }
+    }
+    (() => {
+      let fileData = null;
+      document.getElementById("jsonFile").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              fileData = JSON.parse(e.target.result);
+              document.getElementById("fileError").textContent = "";
+              document.getElementById("fileUploadDiv").style.display = "none";
+              document.getElementById("questionCountDiv").style.display = "block";
+              document.getElementById("totalQuestions").textContent = fileData.length;
+            } catch {
+              document.getElementById("fileError").textContent = "Invalid JSON file. Please upload a valid file.";
+            }
+          };
+          reader.readAsText(file);
+        }
+      });
+      document.getElementById("startBtn").addEventListener("click", () => {
+        const count = parseInt(document.getElementById("numQuestions").value);
+        if (isNaN(count) || count <= 0) {
+          document.getElementById("messageBox").textContent = "Please enter a valid number.";
+          return;
+        }
+        if (count > fileData.length) {
+          document.getElementById("messageBox").textContent = "Number exceeds available questions.";
+          return;
+        }
+        document.getElementById("messageBox").textContent = "";
+        document.getElementById("questionCountDiv").style.display = "none";
+        document.getElementById("quizContainer").style.display = "block";
+        quiz = new Quiz(fileData);
+        quiz.start(count);
+        ui = new QuizUI(quiz);
+        ui.showQuestion();
+        document.getElementById("nextBtn").onclick = () => {
+          if (quiz.next()) {
+            ui.showQuestion();
+          } else {
+            ui.showCompletion();
+          }
+        };
+      });
+    })();
+  </script>
+</body>
+</html>

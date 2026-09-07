@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="icon" type="image/png" href="lib/icon/CalC.png" />
+        <title>Mathletics</title>
+        <style>
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            :root {
+                --bg-main: #1d2129;
+                --bg-panel: #202534;
+                --border: #3e4551;
+                --accent: #63b6f1;
+                --highlight: #f5c8e1;
+                --text-main: #e1e5eb;
+                --text-dim: #e6c2c2;
+                --success: #76b975;
+                --error: #af6068;
+                --font-stack: "Courier New", Courier, monospace;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                font-family: var(--font-stack);
+                background-color: var(--bg-main);
+                color: var(--text-main);
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                padding: 40px 20px;
+                user-select: none;
+                touch-action: manipulation;
+                min-height: 100vh;
+            }
+            .terminal-container {
+                width: 100%;
+                max-width: 750px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            header {
+                border-bottom: 2px solid var(--border);
+                padding-bottom: 20px;
+                margin-bottom: 10px;
+            }
+            .system-status {
+                font-size: 13px;
+                color: var(--text-dim);
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                align-items: center;
+            }
+            .status-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .user-tag {
+                color: var(--accent);
+                font-weight: bold;
+            }
+            .cli-tabs {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                background: transparent;
+                border: 1px solid transparent;
+                color: var(--text-dim);
+                padding: 8px 12px;
+                font-family: inherit;
+                cursor: pointer;
+                text-transform: uppercase;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                transition: all 0.2s;
+                font-size: 12px;
+            }
+            .tab-btn:hover {
+                color: var(--text-main);
+                box-shadow: 0px 3px 0px rgba(50, 50, 100, 1);
+            }
+            .tab-btn.active {
+                color: #cc6ea2;
+                box-shadow: 0px 3px 0px rgba(180, 130, 190, 1);
+            }
+            .cmd-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: var(--bg-panel);
+                padding: 12px 16px;
+                border: 1px solid var(--border);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            }
+            .cmd-info {
+                font-size: 12px;
+                font-weight: bold;
+                display: flex;
+                gap: 20px;
+                letter-spacing: 0.5px;
+                color: var(--text-dim);
+            }
+            .btn-action {
+                background: var(--bg-main);
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                padding: 6px 16px;
+                font-family: inherit;
+                font-size: 12px;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: 0.1s;
+                font-weight: bold;
+            }
+            .btn-action:hover {
+                background: var(--accent);
+                color: var(--bg-main);
+            }
+            .btn-action:active {
+                transform: translateY(2px);
+            }
+            .terminal-window {
+                border: 1px solid var(--border);
+                background: var(--bg-main);
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            }
+            .window-header {
+                background: var(--bg-panel);
+                border-bottom: 1px solid var(--border);
+                padding: 12px 20px;
+                display: grid;
+                grid-template-columns: 1fr 1.5fr;
+                font-size: 12px;
+                text-transform: uppercase;
+                font-weight: bold;
+                letter-spacing: 1px;
+                color: var(--highlight);
+            }
+            .cli-row {
+                display: grid;
+                grid-template-columns: 1fr 1.5fr;
+                padding: 12px 20px;
+                align-items: center;
+                border-bottom: 1px dashed var(--border);
+                transition: background 0.2s;
+            }
+            .cli-row:last-child {
+                border-bottom: none;
+            }
+            .cli-row:hover {
+                background: var(--bg-panel);
+            }
+            .input-wrapper {
+                display: flex;
+                align-items: center;
+            }
+            .cli-input {
+                width: 120px;
+                background: transparent;
+                border: none;
+                border-bottom: 2px solid var(--border);
+                font-family: inherit;
+                font-size: 16px;
+                color: var(--text-main);
+                padding: 8px 5px;
+                outline: none;
+                height: 40px;
+                transition: all 0.2s;
+                border-radius: 0;
+                -webkit-user-select: text;
+                -moz-user-select: text;
+                -ms-user-select: text;
+                user-select: text;
+            }
+            .cli-input:focus {
+                border-bottom-color: var(--accent);
+            }
+            .cli-input.correct {
+                border-bottom-color: var(--success);
+                color: var(--success);
+                background: transparent;
+                font-weight: bold;
+            }
+            .cli-input.wrong {
+                border-bottom-color: var(--error);
+                color: var(--error);
+                background: transparent;
+            }
+
+            /* New Shake Animation for UX */
+            @keyframes shake {
+                10%,
+                90% {
+                    transform: translate3d(-1px, 0, 0);
+                }
+                20%,
+                80% {
+                    transform: translate3d(2px, 0, 0);
+                }
+                30%,
+                50%,
+                70% {
+                    transform: translate3d(-3px, 0, 0);
+                }
+                40%,
+                60% {
+                    transform: translate3d(3px, 0, 0);
+                }
+            }
+            .shake {
+                animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            }
+
+            .status-msg {
+                font-size: 11px;
+                margin-left: 12px;
+                text-transform: uppercase;
+                min-width: 40px;
+                letter-spacing: 0.5px;
+                font-weight: bold;
+            }
+            .note-container {
+                padding: 15px;
+                display: grid;
+                gap: 20px;
+                grid-template-columns: 1fr;
+            }
+            .note-card {
+                background: rgba(32, 37, 52, 0.5);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .card-header {
+                background: rgba(40, 45, 150, 0.1);
+                color: var(--accent);
+                padding: 8px 12px;
+                font-size: 12px;
+                font-weight: bold;
+                border-bottom: 1px solid var(--border);
+                letter-spacing: 1px;
+            }
+            .card-body {
+                padding: 15px;
+            }
+            .chip-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .chip {
+                border: 1px solid var(--border);
+                padding: 4px 8px;
+                border-radius: 2px;
+                transition: all 0.2s;
+                font-size: 13px;
+            }
+            .chip:hover {
+                border-color: var(--accent);
+                transform: translateY(-1px);
+            }
+            .kv-list {
+                display: grid;
+                gap: 15px;
+            }
+            .kv-item {
+                font-size: 13px;
+                display: flex;
+                justify-content: space-between;
+                padding-bottom: 5px;
+                border-bottom: 1px dashed var(--border);
+            }
+            .kv-key {
+                color: #af9292;
+                font-weight: bold;
+            }
+            .kv-val {
+                color: #ffe6f4;
+            }
+            .tricks-layout {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 20px;
+            }
+            .trick-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 13px;
+                margin-bottom: 8px;
+                padding-bottom: 5px;
+                border-bottom: 1px dashed var(--border);
+            }
+            .trick-left {
+                color: #af9292;
+                font-weight: bold;
+            }
+            .trick-right {
+                color: #ffe6f4;
+            }
+            .sign-matrix {
+                border-collapse: collapse;
+                font-size: 20px;
+                font-weight: bold;
+                width: 100%;
+                height: 100%;
+            }
+            .sign-matrix td {
+                text-align: center;
+                border: 1px solid var(--border);
+                padding: 5px;
+            }
+            .s-plus {
+                color: var(--success);
+            }
+            .s-minus {
+                color: var(--error);
+            }
+            .frac-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            @media (max-width: 600px) {
+                .window-header,
+                .cli-row {
+                    grid-template-columns: 0.8fr 1.2fr;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+                .cli-input {
+                    width: 100%;
+                    max-width: 100px;
+                    font-size: 14px;
+                }
+                .cmd-info {
+                    flex-direction: column;
+                    gap: 5px;
+                    align-items: flex-start;
+                }
+                .system-status {
+                    gap: 10px;
+                }
+                .cli-tabs {
+                    gap: 5px;
+                }
+                .tab-btn {
+                    padding: 6px 8px;
+                    font-size: 11px;
+                }
+                .tricks-layout {
+                    grid-template-columns: 1fr;
+                }
+                .card-body {
+                    padding: 10px;
+                }
+                .frac-grid {
+                    grid-template-columns: 1fr !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="terminal-container">
+            <header>
+                <div class="system-status">
+                    <div class="status-item"><span>SYS:</span> <span style="color: var(--success)">ONLINE</span></div>
+                    <span>|</span>
+                    <div class="status-item"><span>USER:</span> <span class="user-tag">MANDIP</span></div>
+                </div>
+            </header>
+
+            <!-- Added data-tab attribute to dynamically drive the JS -->
+            <div class="cli-tabs">
+                <button class="tab-btn active" data-tab="squares" onclick="app.switchTab('squares')">[1] SQ²</button>
+                <button class="tab-btn" data-tab="cubes" onclick="app.switchTab('cubes')">[2] CU³</button>
+                <button class="tab-btn" data-tab="multi" onclick="app.switchTab('multi')">[3] TABLES</button>
+                <button class="tab-btn" data-tab="special" onclick="app.switchTab('special')">[4] SPECIAL</button>
+                <button class="tab-btn" data-tab="multi2d" onclick="app.switchTab('multi2d')">[5] MUL×</button>
+                <button class="tab-btn" data-tab="add2d" onclick="app.switchTab('add2d')">[6] ADD+</button>
+                <button class="tab-btn" data-tab="sub2d" onclick="app.switchTab('sub2d')">[7] SUB-</button>
+                <button class="tab-btn" data-tab="mix" onclick="app.switchTab('mix')">[8] MIX</button>
+                <button class="tab-btn" data-tab="notes" onclick="app.switchTab('notes')">[9] NOTES</button>
+            </div>
+
+            <div class="cmd-bar">
+                <div class="cmd-info">
+                    <span>PROGRESS: <span id="progress-display">00/00</span></span>
+                    <span>TIME: <span id="timer-display">00:00</span></span>
+                </div>
+                <button class="btn-action" onclick="app.refresh()">RELOAD_DATA()</button>
+            </div>
+            <div class="terminal-window">
+                <div class="window-header">
+                    <div>QUERY</div>
+                    <div>INPUT_VALUE</div>
+                </div>
+                <div class="window-body" id="grid-content"></div>
+            </div>
+        </div>
+
+        <script>
+            const app = {
+                currentTab: "squares",
+                correctCount: 0,
+                totalItems: 0,
+                timerInterval: null,
+                startTime: null,
+
+                init() {
+                    this.switchTab("squares");
+                },
+
+                getRandom2Digit() {
+                    return Math.floor(Math.random() * 90) + 10;
+                },
+
+                getRandom3Digit() {
+                    return Math.floor(Math.random() * 900) + 100;
+                },
+
+                getUniqueRandom(targetCount, generatorFn) {
+                    const result = [];
+                    const seen = new Set();
+                    let attempts = 0;
+                    while (result.length < targetCount && attempts < targetCount * 10) {
+                        const item = generatorFn();
+                        if (!seen.has(item.q)) {
+                            seen.add(item.q);
+                            result.push(item);
+                        }
+                        attempts++;
+                    }
+                    return result;
+                },
+
+                getData(type) {
+                    let data = [];
+                    if (type === "squares") {
+                        for (let i = 1; i <= 40; i++) data.push({ q: `${i}²`, a: i * i });
+                        data = this.shuffle(data);
+                    } else if (type === "cubes") {
+                        for (let i = 1; i <= 25; i++) data.push({ q: `${i}³`, a: i * i * i });
+                        data = this.shuffle(data);
+                    } else if (type === "multi") {
+                        for (let i = 1; i <= 25; i++) {
+                            for (let j = 1; j <= 10; j++) data.push({ q: `${i} × ${j}`, a: i * j });
+                        }
+                        data = this.shuffle(data);
+                    } else if (type === "add2d") {
+                        data = this.getUniqueRandom(20, () => {
+                            let n1 = this.getRandom3Digit();
+                            let n2 = this.getRandom3Digit();
+                            return { q: `${n1} + ${n2}`, a: n1 + n2 };
+                        });
+                    } else if (type === "sub2d") {
+                        data = this.getUniqueRandom(20, () => {
+                            let n1 = this.getRandom3Digit();
+                            let n2 = this.getRandom3Digit();
+                            if (n1 < n2) [n1, n2] = [n2, n1];
+                            return { q: `${n1} - ${n2}`, a: n1 - n2 };
+                        });
+                    } else if (type === "multi2d") {
+                        data = this.getUniqueRandom(20, () => {
+                            let n1 = this.getRandom2Digit();
+                            let n2 = this.getRandom2Digit();
+                            return { q: `${n1} × ${n2}`, a: n1 * n2 };
+                        });
+                    } else if (type === "special") {
+                        const allowedX = [12, 13, 14, 16, 17, 18, 19, 23];
+                        const allowedY = [3, 4, 6, 7, 8, 9];
+                        for (let x of allowedX) {
+                            for (let y of allowedY) {
+                                data.push({ q: `${x} × ${y}`, a: x * y });
+                            }
+                        }
+                        data = this.shuffle(data);
+                    } else if (type === "mix") {
+                        const temp = [];
+                        const sqSet = new Set();
+                        while (sqSet.size < 5) sqSet.add(Math.floor(Math.random() * 40) + 1);
+                        sqSet.forEach((i) => temp.push({ q: `${i}²`, a: i * i }));
+
+                        const cuSet = new Set();
+                        while (cuSet.size < 5) cuSet.add(Math.floor(Math.random() * 25) + 1);
+                        cuSet.forEach((i) => temp.push({ q: `${i}³`, a: i * i * i }));
+
+                        temp.push(
+                            ...this.getUniqueRandom(5, () => {
+                                let n1 = this.getRandom2Digit(),
+                                    n2 = this.getRandom2Digit();
+                                return { q: `${n1} + ${n2}`, a: n1 + n2 };
+                            })
+                        );
+
+                        temp.push(
+                            ...this.getUniqueRandom(5, () => {
+                                let n1 = this.getRandom2Digit(),
+                                    n2 = this.getRandom2Digit();
+                                if (n1 < n2) [n1, n2] = [n2, n1];
+                                return { q: `${n1} - ${n2}`, a: n1 - n2 };
+                            })
+                        );
+
+                        const allowedX = [12, 13, 14, 16, 17, 18, 19, 23];
+                        const allowedY = [3, 4, 6, 7, 8, 9];
+                        temp.push(
+                            ...this.getUniqueRandom(5, () => {
+                                const x = allowedX[Math.floor(Math.random() * allowedX.length)];
+                                const y = allowedY[Math.floor(Math.random() * allowedY.length)];
+                                return { q: `${x} × ${y}`, a: x * y };
+                            })
+                        );
+                        data = this.shuffle(temp);
+                    }
+                    return data;
+                },
+
+                shuffle(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                },
+
+                startTimer() {
+                    this.stopTimer();
+                    this.startTime = Date.now();
+                    document.getElementById("timer-display").innerText = "00:00";
+                    this.timerInterval = setInterval(() => {
+                        const now = Date.now();
+                        const diff = Math.floor((now - this.startTime) / 1000);
+                        const m = Math.floor(diff / 60)
+                            .toString()
+                            .padStart(2, "0");
+                        const s = (diff % 60).toString().padStart(2, "0");
+                        document.getElementById("timer-display").innerText = `${m}:${s}`;
+                    }, 1000);
+                },
+
+                stopTimer() {
+                    if (this.timerInterval) {
+                        clearInterval(this.timerInterval);
+                        this.timerInterval = null;
+                    }
+                },
+
+                // Refactored: Dynamic Tab Switching
+                switchTab(type) {
+                    this.currentTab = type;
+                    document.querySelectorAll(".tab-btn").forEach((btn) => {
+                        if (btn.dataset.tab === type) {
+                            btn.classList.add("active");
+                        } else {
+                            btn.classList.remove("active");
+                        }
+                    });
+                    this.refresh();
+                },
+
+                refresh() {
+                    this.correctCount = 0;
+                    const container = document.getElementById("grid-content");
+                    container.innerHTML = "";
+                    const cmdBar = document.querySelector(".cmd-bar");
+                    const winHeader = document.querySelector(".window-header");
+
+                    if (this.currentTab === "notes") {
+                        cmdBar.style.display = "none";
+                        winHeader.style.display = "none";
+                        this.stopTimer();
+                        // Extracted notes generation for much cleaner code
+                        container.innerHTML = this.getNotesHTML();
+                        return;
+                    }
+
+                    cmdBar.style.display = "flex";
+                    winHeader.style.display = "grid";
+
+                    let data = this.getData(this.currentTab);
+                    this.totalItems = data.length;
+                    this.updateStats();
+                    this.startTimer();
+
+                    const fragment = document.createDocumentFragment();
+                    data.forEach((item, index) => {
+                        const row = document.createElement("div");
+                        row.className = "cli-row";
+
+                        const qDiv = document.createElement("div");
+                        qDiv.textContent = `> ${item.q}`;
+
+                        const aDiv = document.createElement("div");
+                        aDiv.className = "input-wrapper";
+
+                        const input = document.createElement("input");
+
+                        // UX Improvement: Perfect mobile numpad, hides up/down arrows
+                        input.type = "text";
+                        input.setAttribute("inputmode", "numeric");
+                        input.pattern = "[0-9]*";
+
+                        input.className = "cli-input";
+                        input.placeholder = "_";
+
+                        // UX Improvement: Arrow Key Navigation
+                        input.addEventListener("keydown", (e) => {
+                            const allInputs = Array.from(document.querySelectorAll(".cli-input"));
+                            const currentIndex = allInputs.indexOf(input);
+
+                            if (e.key === "ArrowDown" || e.key === "Enter") {
+                                e.preventDefault();
+                                if (currentIndex < allInputs.length - 1) allInputs[currentIndex + 1].focus();
+                            } else if (e.key === "ArrowUp") {
+                                e.preventDefault();
+                                if (currentIndex > 0) allInputs[currentIndex - 1].focus();
+                            }
+                        });
+
+                        const status = document.createElement("span");
+                        status.className = "status-msg";
+
+                        const validate = () => {
+                            const val = input.value;
+                            const wasCorrect = input.classList.contains("correct");
+                            input.classList.remove("correct", "wrong");
+
+                            if (val === "") {
+                                status.textContent = "";
+                                if (wasCorrect) {
+                                    this.correctCount--;
+                                    this.updateStats();
+                                }
+                                return;
+                            }
+
+                            if (/^\d+$/.test(val) && Number(val) === item.a) {
+                                input.classList.add("correct");
+                                status.textContent = "[OK]";
+                                status.style.color = "var(--success)";
+                                if (!wasCorrect) {
+                                    this.correctCount++;
+                                    this.updateStats();
+                                    if (this.correctCount === this.totalItems) {
+                                        this.stopTimer();
+                                        status.textContent = "DONE";
+                                        setTimeout(() => {
+                                            window.scrollTo({ top: 0, behavior: "smooth" });
+                                        }, 1000);
+                                    }
+
+                                    // Auto-advance
+                                    const allInputs = Array.from(document.querySelectorAll(".cli-input"));
+                                    const currentIndex = allInputs.indexOf(input);
+                                    if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
+                                        allInputs[currentIndex + 1].focus();
+                                    }
+                                }
+                            } else {
+                                if (wasCorrect) {
+                                    this.correctCount--;
+                                    this.updateStats();
+                                }
+                                if (val.length >= item.a.toString().length) {
+                                    input.classList.add("wrong");
+
+                                    // UX Improvement: Shake animation
+                                    input.classList.add("shake");
+                                    setTimeout(() => input.classList.remove("shake"), 300);
+
+                                    status.textContent = "ERR";
+                                    status.style.color = "var(--error)";
+                                } else {
+                                    status.textContent = "";
+                                }
+                            }
+                        };
+
+                        input.addEventListener("input", validate);
+                        aDiv.appendChild(input);
+                        aDiv.appendChild(status);
+                        row.appendChild(qDiv);
+                        row.appendChild(aDiv);
+                        fragment.appendChild(row);
+                    });
+
+                    container.appendChild(fragment);
+                    const firstInput = container.querySelector("input");
+                    if (firstInput) firstInput.focus();
+                },
+
+                updateStats() {
+                    const curr = this.correctCount.toString().padStart(2, "0");
+                    const total = this.totalItems.toString().padStart(2, "0");
+                    document.getElementById("progress-display").innerText = `${curr}/${total}`;
+                },
+
+                // Refactored: Pulled massive HTML string out of the refresh logic
+                getNotesHTML() {
+                    return `
+<div class="note-container">
+  <div class="note-card">
+    <div class="card-header">
+      <span>REMEMBER_TRICKS [% - x/y]</span>
+    </div>
+    <div class="card-body tricks-layout">
+      <div class="trick-list">
+        <div class="trick-row"><span class="trick-left">0.5</span> <span class="trick-right">1/8</span></div>
+        <div class="trick-row"><span class="trick-left">0.25 / 0.75</span> <span class="trick-right">1/16</span></div>
+        <div class="trick-row"><span class="trick-left">XY.XY</span> <span class="trick-right">1/11</span></div>
+        <div class="trick-row"><span class="trick-left">XX.XX</span> <span class="trick-right">1/9</span></div>
+        <div class="trick-row"><span class="trick-left">X.2X</span> <span class="trick-right">1/14, 1/7</span></div>
+        <div class="trick-row">
+          <span class="trick-left">0.66 / 0.33</span> <span class="trick-right">1/15, 1/12, 1/6, 1/3</span>
+        </div>
+      </div>
+      <div class="matrix-wrapper">
+        <table class="sign-matrix">
+          <tr>
+            <td class="s-minus">−</td>
+            <td class="s-plus">+</td>
+            <td class="s-plus">+</td>
+            <td class="s-plus">+</td>
+          </tr>
+          <tr>
+            <td class="s-plus">+</td>
+            <td class="s-plus">+</td>
+            <td class="s-minus">−</td>
+            <td class="s-minus">−</td>
+          </tr>
+          <tr>
+            <td class="s-plus">+</td>
+            <td class="s-minus">−</td>
+            <td class="s-minus">−</td>
+            <td class="s-plus">+</td>
+          </tr>
+          <tr>
+            <td class="s-minus">−</td>
+            <td class="s-minus">−</td>
+            <td class="s-plus">+</td>
+            <td class="s-minus">−</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="note-card">
+    <div class="card-header">FRACTIONS → PERCENT [1/n]</div>
+    <div class="card-body">
+      <div class="kv-list frac-grid">
+        <div class="kv-item"><span class="kv-key">1/1</span> <span class="kv-val">100%</span></div>
+        <div class="kv-item"><span class="kv-key">1/2</span> <span class="kv-val">50%</span></div>
+        <div class="kv-item"><span class="kv-key">1/3</span> <span class="kv-val">33.33% | 33⅓%</span></div>
+        <div class="kv-item"><span class="kv-key">1/4</span> <span class="kv-val">25%</span></div>
+        <div class="kv-item"><span class="kv-key">1/5</span> <span class="kv-val">20%</span></div>
+        <div class="kv-item"><span class="kv-key">1/6</span> <span class="kv-val">16.66% | 16⅔%</span></div>
+        <div class="kv-item"><span class="kv-key">1/7</span> <span class="kv-val">14.28% | 14 2/7%</span></div>
+        <div class="kv-item"><span class="kv-key">1/8</span> <span class="kv-val">12.5% | 12½%</span></div>
+        <div class="kv-item"><span class="kv-key">1/9</span> <span class="kv-val">11.11% | 11 1/9%</span></div>
+        <div class="kv-item"><span class="kv-key">1/10</span> <span class="kv-val">10%</span></div>
+        <div class="kv-item"><span class="kv-key">1/11</span> <span class="kv-val">9.09% | 9 1/11%</span></div>
+        <div class="kv-item"><span class="kv-key">1/12</span> <span class="kv-val">8.33% | 8⅓%</span></div>
+        <div class="kv-item"><span class="kv-key">1/13</span> <span class="kv-val">7.69% | 7 9/13%</span></div>
+        <div class="kv-item"><span class="kv-key">1/14</span> <span class="kv-val">7.14% | 7 1/7%</span></div>
+        <div class="kv-item"><span class="kv-key">1/15</span> <span class="kv-val">6.66% | 6⅔%</span></div>
+        <div class="kv-item"><span class="kv-key">1/16</span> <span class="kv-val">6.25% | 6¼%</span></div>
+        <div class="kv-item"><span class="kv-key">1/17</span> <span class="kv-val">5.88% | 5 15/17%</span></div>
+        <div class="kv-item"><span class="kv-key">1/18</span> <span class="kv-val">5.55% | 5 5/9%</span></div>
+        <div class="kv-item"><span class="kv-key">1/19</span> <span class="kv-val">5.26% | 5 5/19%</span></div>
+        <div class="kv-item"><span class="kv-key">1/20</span> <span class="kv-val">5%</span></div>
+        <div class="kv-item"><span class="kv-key">1/21</span> <span class="kv-val">4.76% | 4 16/21%</span></div>
+        <div class="kv-item"><span class="kv-key">1/22</span> <span class="kv-val">4.54% | 4 6/11%</span></div>
+        <div class="kv-item"><span class="kv-key">1/23</span> <span class="kv-val">4.35% | 4 8/23%</span></div>
+        <div class="kv-item"><span class="kv-key">1/24</span> <span class="kv-val">4.16% | 4⅙%</span></div>
+        <div class="kv-item"><span class="kv-key">1/25</span> <span class="kv-val">4%</span></div>
+        <div class="kv-item"><span class="kv-key">1/50</span> <span class="kv-val">2%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <div class="card-header">SQUARES [1-40]</div>
+    <div class="card-body">
+      <div class="kv-list" style="grid-template-columns: repeat(auto-fill, minmax(90px, 1fr))">
+        ${Array.from({ length: 40 }, (_, i) => `<div class="kv-item"><span class="kv-key">${i + 1}²</span> <span class="kv-val">${(i + 1) ** 2}</span></div>`).join("")}
+      </div>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <div class="card-header">CUBES [1-25]</div>
+    <div class="card-body">
+      <div class="kv-list" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))">
+        ${Array.from({ length: 25 }, (_, i) => `<div class="kv-item"><span class="kv-key">${i + 1}³</span> <span class="kv-val">${(i + 1) ** 3}</span></div>`).join("")}
+      </div>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <div class="card-header">CONSECUTIVE_MULTIPLICATION</div>
+    <div class="card-body">
+      <div class="kv-list" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr))">
+        <div class="kv-item"><span class="kv-key">1 × 2</span> <span class="kv-val">2</span></div>
+        <div class="kv-item"><span class="kv-key">2 × 3</span> <span class="kv-val">6</span></div>
+        <div class="kv-item"><span class="kv-key">3 × 4</span> <span class="kv-val">12</span></div>
+        <div class="kv-item"><span class="kv-key">4 × 5</span> <span class="kv-val">20</span></div>
+        <div class="kv-item"><span class="kv-key">5 × 6</span> <span class="kv-val">30</span></div>
+        <div class="kv-item"><span class="kv-key">6 × 7</span> <span class="kv-val">42</span></div>
+        <div class="kv-item"><span class="kv-key">7 × 8</span> <span class="kv-val">56</span></div>
+        <div class="kv-item"><span class="kv-key">8 × 9</span> <span class="kv-val">72</span></div>
+        <div class="kv-item"><span class="kv-key">9 × 10</span> <span class="kv-val">90</span></div>
+        <div class="kv-item"><span class="kv-key">10 × 11</span> <span class="kv-val">110</span></div>
+        <div class="kv-item"><span class="kv-key">11 × 12</span> <span class="kv-val">132</span></div>
+        <div class="kv-item"><span class="kv-key">12 × 13</span> <span class="kv-val">156</span></div>
+        <div class="kv-item"><span class="kv-key">13 × 14</span> <span class="kv-val">182</span></div>
+        <div class="kv-item"><span class="kv-key">14 × 15</span> <span class="kv-val">210</span></div>
+        <div class="kv-item"><span class="kv-key">15 × 16</span> <span class="kv-val">240</span></div>
+        <div class="kv-item"><span class="kv-key">16 × 17</span> <span class="kv-val">272</span></div>
+        <div class="kv-item"><span class="kv-key">17 × 18</span> <span class="kv-val">306</span></div>
+        <div class="kv-item"><span class="kv-key">18 × 19</span> <span class="kv-val">342</span></div>
+        <div class="kv-item"><span class="kv-key">19 × 20</span> <span class="kv-val">380</span></div>
+        <div class="kv-item"><span class="kv-key">20 × 21</span> <span class="kv-val">420</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <div class="card-header">FACTORIALS_AND_POWERS</div>
+    <div class="card-body" style="display: grid; grid-template-columns: 1fr; gap: 20px">
+      <div>
+        <div style="margin-bottom: 10px; color: #28c1d4; font-size: 12px">FACTORIALS (0-8)</div>
+        <div class="kv-list" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))">
+          <div class="kv-item"><span class="kv-key">0!</span> <span class="kv-val">1</span></div>
+          <div class="kv-item"><span class="kv-key">1!</span> <span class="kv-val">1</span></div>
+          <div class="kv-item"><span class="kv-key">2!</span> <span class="kv-val">2</span></div>
+          <div class="kv-item"><span class="kv-key">3!</span> <span class="kv-val">6</span></div>
+          <div class="kv-item"><span class="kv-key">4!</span> <span class="kv-val">24</span></div>
+          <div class="kv-item"><span class="kv-key">5!</span> <span class="kv-val">120</span></div>
+          <div class="kv-item"><span class="kv-key">6!</span> <span class="kv-val">720</span></div>
+          <div class="kv-item"><span class="kv-key">7!</span> <span class="kv-val">5040</span></div>
+          <div class="kv-item"><span class="kv-key">8!</span> <span class="kv-val">40320</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom: 10px; color: #28c1d4; font-size: 12px">POWERS</div>
+        <div class="kv-list" style="grid-template-columns: 1fr">
+          <div class="kv-item">
+            <span class="kv-key">2ⁿ</span> <span class="kv-val">2, 4, 8, 16, 32, 64, 128, 256, 512, 1024</span>
+          </div>
+          <div class="kv-item"><span class="kv-key">3ⁿ</span> <span class="kv-val">3, 9, 27, 81, 243, 729</span></div>
+          <div class="kv-item">
+            <span class="kv-key">4ⁿ</span> <span class="kv-val">4, 16, 64, 256, 1024, 4096</span>
+          </div>
+          <div class="kv-item"><span class="kv-key">5ⁿ</span> <span class="kv-val">5, 25, 125, 625, 3125</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note-card">
+    <div class="card-header">PRIME_NUMBERS [1-100]</div>
+    <div class="card-body">
+      <div class="chip-grid">
+        <span class="chip">2</span><span class="chip">3</span><span class="chip">5</span> <span class="chip">7</span><span class="chip">11</span><span class="chip">13</span> <span class="chip">17</span><span class="chip">19</span><span class="chip">23</span> <span class="chip">29</span><span class="chip">31</span><span class="chip">37</span> <span class="chip">41</span><span class="chip">43</span><span class="chip">47</span> <span class="chip">53</span><span class="chip">59</span><span class="chip">61</span> <span class="chip">67</span><span class="chip">71</span><span class="chip">73</span> <span class="chip">79</span><span class="chip">83</span><span class="chip">89</span>
+        <span class="chip">97</span>
+      </div>
+    </div>
+  </div>
+</div>`;
+                },
+            };
+
+            window.onload = () => app.init();
+        </script>
+    </body>
+</html>

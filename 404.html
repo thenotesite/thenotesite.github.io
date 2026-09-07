@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="lib/icon/404.png" rel="icon" type="image/x-icon" />
+    <title>404 - Error</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #0d0d0d;
+        color: #fff;
+        overflow: hidden;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      .container {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        padding: 0 15px;
+      }
+
+      .glitch {
+        font-size: 10rem;
+        font-weight: 700;
+        position: relative;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        animation: flicker 1.5s infinite;
+      }
+
+      .glitch:before,
+      .glitch:after {
+        content: "404";
+        position: absolute;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        clip: rect(0, 900px, 0, 0);
+      }
+
+      .glitch:before {
+        animation: glitchTop 2s infinite linear alternate-reverse;
+        color: #ff005e;
+        z-index: -1;
+      }
+
+      .glitch:after {
+        animation: glitchBottom 1.5s infinite linear alternate-reverse;
+        color: #00fff9;
+        z-index: -2;
+      }
+
+      @keyframes glitchTop {
+        0% {
+          clip: rect(0, 9999px, 0, 0);
+          transform: translate(0, 0);
+        }
+        20% {
+          clip: rect(0, 9999px, 50px, 0);
+          transform: translate(-5px, -5px);
+        }
+        40% {
+          clip: rect(0, 9999px, 15px, 0);
+          transform: translate(5px, 5px);
+        }
+        60% {
+          clip: rect(0, 9999px, 70px, 0);
+          transform: translate(-3px, 3px);
+        }
+        80% {
+          clip: rect(0, 9999px, 40px, 0);
+          transform: translate(3px, -3px);
+        }
+        100% {
+          clip: rect(0, 9999px, 100px, 0);
+          transform: translate(0, 0);
+        }
+      }
+
+      @keyframes glitchBottom {
+        0% {
+          clip: rect(0, 9999px, 0, 0);
+          transform: translate(0, 0);
+        }
+        20% {
+          clip: rect(85px, 9999px, 140px, 0);
+          transform: translate(5px, 5px);
+        }
+        40% {
+          clip: rect(50px, 9999px, 90px, 0);
+          transform: translate(-5px, -5px);
+        }
+        60% {
+          clip: rect(120px, 9999px, 160px, 0);
+          transform: translate(3px, -3px);
+        }
+        80% {
+          clip: rect(30px, 9999px, 60px, 0);
+          transform: translate(-3px, 3px);
+        }
+        100% {
+          clip: rect(0, 9999px, 100px, 0);
+          transform: translate(0, 0);
+        }
+      }
+
+      @keyframes flicker {
+        0%,
+        19%,
+        21%,
+        23%,
+        25%,
+        54%,
+        56%,
+        100% {
+          opacity: 1;
+        }
+        20%,
+        24%,
+        55% {
+          opacity: 0.6;
+        }
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin: 20px 0;
+        color: #aaa;
+      }
+
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        color: #777;
+      }
+
+      a {
+        display: inline-block;
+        padding: 12px 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0d0d0d;
+        background: #00fff9;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+
+      a:hover {
+        background: #ff005e;
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      @media (max-width: 500px) {
+        .glitch {
+          font-size: 5rem;
+        }
+        h2 {
+          font-size: 1.5rem;
+        }
+        p {
+          font-size: 1rem;
+        }
+        a {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="glitch">404</div>
+      <h2>Page Not Found</h2>
+      <p>Looks like you’re lost in cyberspace.</p>
+      <a href="/">Go Home</a>
+    </div>
+  </body>
+</html>

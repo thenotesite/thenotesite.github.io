@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+        <link rel="icon" type="image/png" href="/todo/icon.png" />
+        <meta name="theme-color" content="#191713" />
+        <title>WhiteBoard</title>
+        <link rel="stylesheet" href="./quickdraw.css" />
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            #board {
+                width: 100vw;
+                height: 100dvh;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="board"></div>
+        <script type="module">
+            import { createQuickdraw } from "./index.js";
+
+            const { editor } = createQuickdraw({
+                container: document.getElementById("board"),
+                theme: "dark",
+                grid: "crosses",
+                watermark: false,
+            });
+
+            const savedSnapshot = localStorage.getItem("quickdraw_board_state");
+            if (savedSnapshot) {
+                try {
+                    const snap = JSON.parse(savedSnapshot);
+                    editor.store.loadSnapshot(snap);
+                    editor.fitContent();
+                } catch (e) {
+                    console.warn("Could not load saved board state", e);
+                }
+            }
+
+            let saveTimeout;
+            editor.store.listen(() => {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    const snap = editor.store.getSnapshot();
+                    localStorage.setItem("quickdraw_board_state", JSON.stringify(snap));
+                }, 500);
+            });
+        </script>
+    </body>
+</html>

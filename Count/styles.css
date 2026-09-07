@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Montserrat&display=swap");
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: "Anton", serif;
+  color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  user-select: none !important;
+  padding: 20px;
+}
+
+#count {
+  font-size: 7rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff2687, #cad8e1, #c61c2f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.25s ease;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+}
+
+button {
+  font-size: 0.75rem;
+  padding: 15px;
+  background: #ea2264;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-1.5px);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+#increase-btn {
+  background: #3c4188;
+}
+
+#increase-btn:hover {
+  background-color: #474d9b;
+}
+
+#decrease-btn {
+  background: #733147;
+}
+
+#decrease-btn:hover {
+  background: #873651;
+}
+
+.reset-btn {
+  background-color: #d6d6d6;
+  color: #333;
+}
+
+.reset-btn:hover {
+  background-color: #bfbfbf;
+}

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+  />
+
+  <link href="lib/icon/feed.png" rel="icon" type="image/x-icon" />
+
+  <title>Editorial</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap");
+
+    :root {
+      --bg: #0b0f19;
+      --bg-soft: #111827;
+      --card: rgba(255, 255, 255, 0.055);
+      --card-hover: rgba(255, 255, 255, 0.085);
+      --border: rgba(255, 255, 255, 0.1);
+
+      --white: #f8fafc;
+      --text: #d5dae3;
+      --muted: #8992a3;
+
+      --gold: #d6b36a;
+      --gold-light: #f0d69a;
+
+      --accent: #7184ff;
+
+      --shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35);
+
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+
+      font-family: "DM Sans", sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(113, 132, 255, 0.12),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(214, 179, 106, 0.08),
+          transparent 28%
+        ),
+        linear-gradient(
+          135deg,
+          #080b12 0%,
+          #0b0f19 45%,
+          #0d1320 100%
+        );
+
+      padding: 55px 22px 35px;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* =========================
+       MAIN CONTAINER
+    ========================= */
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      text-align: center;
+      margin-bottom: 55px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      color: var(--gold);
+
+      font-size: 0.72rem;
+      font-weight: 700;
+
+      letter-spacing: 3px;
+      text-transform: uppercase;
+
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      content: "";
+
+      width: 28px;
+      height: 1px;
+
+      background: var(--gold);
+
+      opacity: 0.7;
+    }
+
+    .eyebrow a {
+      color: var(--gold);
+
+      font-family: "DM Sans", sans-serif;
+
+      font-size: inherit;
+      font-weight: inherit;
+
+      letter-spacing: inherit;
+      text-transform: inherit;
+
+      text-decoration: none;
+
+      transition: color 0.25s ease;
+    }
+
+    .eyebrow a:hover {
+      color: var(--gold-light);
+    }
+
+    h1 {
+      font-family: "Playfair Display", Georgia, serif;
+
+      color: var(--white);
+
+      font-size: clamp(2.5rem, 7vw, 5rem);
+
+      font-weight: 700;
+
+      line-height: 1.05;
+
+      letter-spacing: -1.5px;
+
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      max-width: 600px;
+
+      margin: auto;
+
+      color: var(--muted);
+
+      font-size: 0.95rem;
+
+      line-height: 1.7;
+    }
+
+    /* =========================
+       DECORATIVE LINE
+    ========================= */
+
+    .header-line {
+      width: 80px;
+      height: 3px;
+
+      margin: 25px auto 0;
+
+      border-radius: 100px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+    }
+
+    /* =========================
+       FEED GRID
+    ========================= */
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr;
+
+      gap: 25px;
+    }
+
+    @media (min-width: 720px) {
+      .grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+
+        gap: 28px;
+      }
+    }
+
+    /* =========================
+       CARD
+    ========================= */
+
+    .card {
+      position: relative;
+
+      overflow: hidden;
+
+      padding: 30px;
+
+      border-radius: var(--radius);
+
+      border: 1px solid var(--border);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.025)
+        );
+
+      backdrop-filter: blur(16px);
+
+      -webkit-backdrop-filter: blur(16px);
+
+      box-shadow: var(--shadow);
+
+      transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+    }
+
+    .card::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+
+      left: 30px;
+      right: 30px;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(214, 179, 106, 0.8),
+          transparent
+        );
+
+      opacity: 0.8;
+    }
+
+    .card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      top: -100px;
+      right: -100px;
+
+      border-radius: 50%;
+
+      background: rgba(113, 132, 255, 0.09);
+
+      filter: blur(20px);
+
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-7px);
+
+      border-color:
+        rgba(214, 179, 106, 0.35);
+
+      background: var(--card-hover);
+
+      box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.45),
+        0 0 0 1px
+        rgba(214, 179, 106, 0.04);
+    }
+
+    /* =========================
+       CARD HEADER
+    ========================= */
+
+    .card-header {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 25px;
+    }
+
+    .card h2 {
+      position: relative;
+
+      font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+      color: var(--white);
+
+      font-size: 1.55rem;
+
+      font-weight: 700;
+
+      line-height: 1.2;
+    }
+
+    .card h2 a {
+      color: var(--white);
+
+      font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+      font-size: inherit;
+
+      font-weight: inherit;
+
+      line-height: inherit;
+
+      text-decoration: none;
+
+      transition: color 0.25s ease;
+    }
+
+    .card h2 a:hover {
+      color: var(--gold-light);
+    }
+
+    .card-number {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-width: 34px;
+
+      height: 34px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(214, 179, 106, 0.35);
+
+      color: var(--gold);
+
+      font-size: 0.72rem;
+
+      font-weight: 700;
+
+      letter-spacing: 1px;
+    }
+
+    .gold-line {
+      width: 45px;
+
+      height: 2px;
+
+      background: var(--gold);
+
+      margin-top: 10px;
+
+      border-radius: 10px;
+    }
+
+    /* =========================
+       FEED LIST
+    ========================= */
+
+    ol {
+      list-style: none;
+
+      counter-reset: editorial;
+
+      padding: 0;
+    }
+
+    li {
+      position: relative;
+
+      counter-increment: editorial;
+
+      padding: 17px 0 17px 48px;
+
+      border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+    }
+
+    li:first-child {
+      padding-top: 5px;
+    }
+
+    li:last-child {
+      border-bottom: none;
+
+      padding-bottom: 5px;
+    }
+
+    li::before {
+      content:
+        counter(
+          editorial,
+          decimal-leading-zero
+        );
+
+      position: absolute;
+
+      left: 0;
+
+      top: 19px;
+
+      color: #626b7c;
+
+      font-family:
+        "Playfair Display",
+        serif;
+
+      font-size: 0.85rem;
+
+      font-weight: 600;
+
+      letter-spacing: 1px;
+    }
+
+    li:first-child::before {
+      top: 7px;
+
+      color: var(--gold);
+    }
+
+    /* =========================
+       LINKS
+    ========================= */
+
+    a {
+      display: inline;
+
+      color: #e9edf5;
+
+      font-family:
+        "DM Sans",
+        sans-serif;
+
+      font-size: 0.96rem;
+
+      font-weight: 600;
+
+      line-height: 1.55;
+
+      text-decoration: none;
+
+      transition: color 0.25s ease;
+    }
+
+    a:hover {
+      color: var(--gold-light);
+    }
+
+    /* =========================
+       DATE
+    ========================= */
+
+    small {
+      display: block;
+
+      margin-top: 6px;
+
+      color: var(--muted);
+
+      font-size: 0.72rem;
+
+      font-weight: 500;
+
+      letter-spacing: 0.2px;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    #feed-thehindu,
+    #feed-indianexpress {
+      min-height: 100px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      margin-top: 55px;
+
+      text-align: center;
+
+      color: #697284;
+
+      font-size: 0.75rem;
+
+      letter-spacing: 1px;
+    }
+
+    footer span {
+      color: var(--gold);
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 35px 14px 25px;
+      }
+
+      .header {
+        margin-bottom: 35px;
+      }
+
+      h1 {
+        font-size:
+          clamp(
+            2.3rem,
+            13vw,
+            3.5rem
+          );
+
+        letter-spacing: -1px;
+      }
+
+      .subtitle {
+        font-size: 0.86rem;
+
+        padding: 0 10px;
+      }
+
+      .eyebrow {
+        font-size: 0.65rem;
+
+        letter-spacing: 2px;
+      }
+
+      .eyebrow::before,
+      .eyebrow::after {
+        width: 18px;
+      }
+
+      .grid {
+        gap: 18px;
+      }
+
+      .card {
+        padding: 22px 19px;
+
+        border-radius: 15px;
+      }
+
+      .card::before {
+        left: 20px;
+        right: 20px;
+      }
+
+      .card-header {
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        font-size: 1.35rem;
+      }
+
+      .card-number {
+        min-width: 30px;
+
+        height: 30px;
+
+        font-size: 0.65rem;
+      }
+
+      li {
+        padding:
+          15px 0 15px 42px;
+      }
+
+      li::before {
+        top: 17px;
+
+        font-size: 0.76rem;
+      }
+
+      li:first-child::before {
+        top: 6px;
+      }
+
+      a {
+        font-size: 0.9rem;
+      }
+
+      small {
+        font-size: 0.68rem;
+      }
+
+      footer {
+        margin-top: 35px;
+      }
+    }
+
+    /* =========================
+       SMALL PHONES
+    ========================= */
+
+    @media (max-width: 360px) {
+
+      body {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .card {
+        padding: 19px 16px;
+      }
+
+      .card h2 {
+        font-size: 1.25rem;
+      }
+
+      a {
+        font-size: 0.86rem;
+      }
+    }
+
+    /* =========================
+       REDUCED MOTION
+    ========================= */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      .card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+      <div class="eyebrow">
+
+        <a
+          href="https://www.thehindubusinessline.com/opinion/editorial/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Daily Perspective
+        </a>
+
+      </div>
+
+      <h1>
+        Latest Editorials
+      </h1>
+
+      <p class="subtitle">
+        Thoughtful opinions, analysis and perspectives from
+        leading publications around the world.
+      </p>
+
+      <div class="header-line"></div>
+
+    </header>
+
+
+    <!-- FEEDS -->
+
+    <main class="grid">
+
+      <!-- THE HINDU -->
+
+      <section
+        class="card"
+        id="thehindu"
+      >
+
+        <div class="card-header">
+
+          <div>
+
+            <h2>
+
+              <a
+                href="https://www.thehindu.com/videos/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                The Hindu
+              </a>
+
+            </h2>
+
+            <div class="gold-line"></div>
+
+          </div>
+
+          <div class="card-number">
+            01
+          </div>
+
+        </div>
+
+        <div id="feed-thehindu">
+          Loading...
+        </div>
+
+      </section>
+
+
+      <!-- THE INDIAN EXPRESS -->
+
+      <section
+        class="card"
+        id="indianexpress"
+      >
+
+        <div class="card-header">
+
+          <div>
+
+            <h2>
+
+              <a
+                href="https://indianexpress.com/todays-paper/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                The Indian Express
+              </a>
+
+            </h2>
+
+            <div class="gold-line"></div>
+
+          </div>
+
+          <div class="card-number">
+            02
+          </div>
+
+        </div>
+
+        <div id="feed-indianexpress">
+          Loading...
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+    © <span>MANDIP</span> · All rights reserved.
+  </footer>
+
+
+  <script>
+
+    const rss2jsonApi =
+      "https://api.rss2json.com/v1/api.json?rss_url=";
+
+
+    const feeds = [
+
+      {
+        id: "feed-thehindu",
+
+        url:
+          "https://www.thehindu.com/opinion/editorial/feeder/default.rss",
+      },
+
+      {
+        id: "feed-indianexpress",
+
+        url:
+          "https://indianexpress.com/section/opinion/editorials/feed/",
+      },
+
+    ];
+
+
+    function decodeHTMLEntities(text) {
+
+      const textarea =
+        document.createElement(
+          "textarea"
+        );
+
+      textarea.innerHTML = text;
+
+      return textarea.value;
+
+    }
+
+
+    function formatDate(pubDate) {
+
+      const dateObj =
+        new Date(pubDate);
+
+
+      const day =
+        String(
+          dateObj.getDate()
+        ).padStart(2, "0");
+
+
+      const month =
+        dateObj
+          .toLocaleString(
+            "en-US",
+            {
+              month: "short",
+            }
+          )
+          .toUpperCase();
+
+
+      const year =
+        dateObj.getFullYear();
+
+
+      const time =
+        dateObj.toLocaleTimeString(
+          "en-GB",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          }
+        );
+
+
+      return (
+        `${day} ${month} ${year} — ${time}`
+      );
+
+    }
+
+
+    feeds.forEach((feed) => {
+
+      fetch(
+        rss2jsonApi +
+        encodeURIComponent(
+          feed.url
+        )
+      )
+
+        .then((res) => {
+
+          if (!res.ok) {
+
+            throw new Error(
+              "Network response failed"
+            );
+
+          }
+
+          return res.json();
+
+        })
+
+
+        .then((data) => {
+
+          const container =
+            document.getElementById(
+              feed.id
+            );
+
+
+          if (
+            !data.items ||
+            data.items.length === 0
+          ) {
+
+            container.textContent =
+              "No posts found.";
+
+            return;
+
+          }
+
+
+          const now =
+            new Date();
+
+
+          const daysAgo =
+            new Date(now);
+
+
+          daysAgo.setDate(
+            now.getDate() - 7
+          );
+
+
+          const recentItems =
+            data.items.filter(
+              (item) => {
+
+                const pubDate =
+                  new Date(
+                    item.pubDate
+                  );
+
+
+                return (
+                  pubDate >= daysAgo &&
+                  pubDate <= now
+                );
+
+              }
+            );
+
+
+          if (
+            recentItems.length === 0
+          ) {
+
+            container.textContent =
+              "No recent posts.";
+
+            return;
+
+          }
+
+
+          let html =
+            "<ol>";
+
+
+          recentItems
+            .slice(0, 7)
+            .forEach((item) => {
+
+              const title =
+                decodeHTMLEntities(
+                  item.title
+                );
+
+
+              const date =
+                formatDate(
+                  item.pubDate
+                );
+
+
+              html += `
+                <li>
+                  <a
+                    href="${item.link}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ${title}
+                  </a>
+
+                  <small>
+                    ${date}
+                  </small>
+                </li>
+              `;
+
+            });
+
+
+          html +=
+            "</ol>";
+
+
+          container.innerHTML =
+            html;
+
+        })
+
+
+        .catch((err) => {
+
+          document.getElementById(
+            feed.id
+          ).textContent =
+            "Failed to load feed.";
+
+
+          console.error(
+            `Error loading ${feed.url}`,
+            err
+          );
+
+        });
+
+    });
+
+  </script>
+
+</body>
+</html>

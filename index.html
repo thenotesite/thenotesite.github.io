@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" href="lib/icon/home.png" />
+        <meta name="theme-color" content="#0d1117" />
+        <title>MyHome</title>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet" />
+        <style>
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            body {
+                margin: 0;
+                font-family: "Fira Code", monospace;
+                background: #0d1117;
+                color: #c9d1d9;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px;
+                background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+                background-size: 40px 40px;
+                overflow-x: hidden;
+                user-select: none !important;
+            }
+
+            p {
+                color: #8b949e;
+                margin-bottom: 40px;
+                font-size: 1.5rem;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+                width: 100%;
+                max-width: 1000px;
+            }
+
+            .card {
+                position: relative;
+                background: rgba(25, 25, 30, 0.5);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 25px;
+                transition:
+                    transform 0.4s ease,
+                    box-shadow 0.4s ease;
+                backdrop-filter: blur(10px);
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeInUp 0.8s forwards;
+            }
+
+            .card:hover {
+                box-shadow: 0 20px 40px rgba(90, 170, 255, 0.3);
+                transform: translateY(-10px) scale(1.05);
+            }
+
+            .card h2 {
+                font-size: 1.3rem;
+                background: linear-gradient(90deg, #ff79c6, #8be9fd, #50fa7b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 15px;
+                transition: 0.3s;
+            }
+
+            .card a {
+                text-decoration: none;
+                color: #76994e;
+                font-size: 1rem;
+                display: block;
+                margin-top: 5px;
+                transition: color 0.3s;
+            }
+
+            .card a:hover {
+                color: #e91e63;
+            }
+
+            footer {
+                margin-top: 60px;
+                color: #6e7681;
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            .card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+            .card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+            .card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+            .card:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+            .card:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+            .card:nth-child(6) {
+                animation-delay: 0.6s;
+            }
+            .card:nth-child(7) {
+                animation-delay: 0.7s;
+            }
+            .card:nth-child(8) {
+                animation-delay: 0.8s;
+            }
+            .card:nth-child(9) {
+                animation-delay: 0.9s;
+            }
+
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <p>// Select a section to explore</p>
+        <main class="grid">
+            <div class="card">
+                <h2>function CalC()</h2>
+                <a href="CalC.html">return "Calculation"</a>
+            </div>
+
+            <div class="card">
+                <h2>function ToDo()</h2>
+                <a href="/todo/">return "ToDo"</a>
+            </div>
+
+            <div class="card">
+                <h2>function WhiteBoard()</h2>
+                <a href="/WhiteBoard/">return "WhiteBoard"</a>
+            </div>
+
+            <div class="card">
+                <h2>function StopWatch()</h2>
+                <a href="StopWatch.html">return "StopWatch"</a>
+            </div>
+
+            <div class="card">
+                <h2>function Podcasts()</h2>
+                <a href="Podcast.html">return "Podcasts"</a>
+            </div>
+
+            <div class="card">
+                <h2>function Editorial()</h2>
+                <a href="Feed.html">return "Editorial"</a>
+            </div>
+
+            <div class="card">
+                <h2>function Typing()</h2>
+                <a href="/typing/">return "Typing"</a>
+            </div>
+
+            <div class="card">
+                <h2>function WordVault()</h2>
+                <a href="FlashCard/WordVault.html">return "WordVault"</a>
+            </div>
+
+            <div class="card">
+                <h2>function WordQuiz()</h2>
+                <a href="FlashCard/JsonQuiz.html">return "WordQuiz"</a>
+            </div>
+        </main>
+        <footer>// © 2026 MANDIP</footer>
+    </body>
+</html>

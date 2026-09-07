@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
+  <meta name="theme-color" content="#15171a" />
+  <title>00:00:00 - Stopwatch</title><link rel="icon" type="image/png" href="lib/icon/time.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-black-void: #15171a;
+      --color-dark-slate: #24272b;
+      --color-slate: #3b3f46;
+      --color-dark-gray: #5e646d;
+      --color-mid-gray: #88909a;
+      --color-light-gray: #b9c1cb;
+      --color-off-white: #f4f6f9;
+      --color-white: #ffffff;
+      --color-accent-bronze: #c5a07a;
+      --color-accent-blue: #7ba5c4;
+      --color-transparent: transparent;
+      --color-overlay-lighter: rgba(185, 193, 203, 0.08);
+      --color-overlay-faint: rgba(185, 193, 203, 0.02);
+      --color-border-soft: rgba(185, 193, 203, 0.15);
+      --color-border-strong: rgba(185, 193, 203, 0.4);
+      --bg-main: var(--color-black-void);
+      --text-primary: var(--color-off-white);
+      --text-secondary: var(--color-light-gray);
+      --text-tertiary: var(--color-dark-gray);
+      --text-cs: var(--color-mid-gray);
+      --text-separator: rgba(185, 193, 203, 0.2);
+      --grad-time-main: linear-gradient(180deg, var(--color-white) 0%, var(--color-light-gray) 40%, var(--color-dark-gray) 100%);
+      --grad-time-cs: linear-gradient(180deg, var(--color-mid-gray) 0%, var(--color-slate) 100%);
+      --grad-btn-bg: linear-gradient(145deg, var(--color-slate), var(--color-black-void));
+      --btn-border: var(--color-border-soft);
+      --btn-border-hover: var(--color-border-strong);
+      --state-start: var(--color-accent-blue);
+      --state-pause: var(--color-accent-bronze);
+    }
+    body {
+      background-color: var(--bg-main);
+      font-family: "Montserrat", sans-serif;
+      margin: 0;
+      overflow: hidden;
+      user-select: none !important;
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      box-sizing: border-box;
+      max-width: 100vw;
+      position: absolute;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .date-display {
+      font-size: clamp(0.5rem, 2vw, 1rem);
+      margin-bottom: 1.5rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+    .date-display .day {
+      color: var(--text-secondary);
+      font-weight: 600;
+      letter-spacing: 2.5px;
+    }
+    .timer {
+      display: grid;
+      grid-template-columns: auto auto auto auto auto auto auto;
+      align-items: baseline;
+      justify-content: center;
+      column-gap: 0.5rem;
+      row-gap: 1rem;
+      font-family: "Anton", "Impact", sans-serif;
+      transition: all 0.3s ease;
+    }
+    .time-val {
+      font-size: 15vw;
+      line-height: 1;
+      width: max-content;
+      min-width: 2ch;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      padding: 0 0.1em;
+      margin: 0 -0.1em;
+      color: var(--text-primary);
+      background: var(--grad-time-main);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: var(--color-transparent);
+      transition: font-size 0.3s ease;
+      will-change: transform;
+      -webkit-font-smoothing: antialiased;
+      transform: translateZ(0);
+    }
+    .time-val.cs {
+      font-size: 7.5vw;
+      color: var(--text-cs);
+      background: var(--grad-time-cs);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: var(--color-transparent);
+    }
+    .sep {
+      font-size: 17vw;
+      line-height: 0;
+      color: var(--text-separator);
+      transition: font-size 0.3s ease;
+    }
+    .label {
+      font-size: 1.5vw;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5em;
+      line-height: 1;
+      text-align: center;
+      user-select: none;
+    }
+    .timer.three-digit-hr .time-val { font-size: 10vw; }
+    .timer.three-digit-hr .sep { font-size: 11.5vw; }
+    .timer.three-digit-hr .time-val.cs { font-size: 5vw; }
+    #hours { grid-area: 1 / 1; justify-self: center; }
+    #minutes { grid-area: 1 / 3; justify-self: center; }
+    #seconds { grid-area: 1 / 5; justify-self: center; }
+    #centiseconds { grid-area: 1 / 7; justify-self: start; }
+    .sep-1 { grid-area: 1 / 2; justify-self: center; }
+    .sep-2 { grid-area: 1 / 4; justify-self: center; }
+    .sep-3 { grid-area: 1 / 6; justify-self: center; }
+    .lbl-hr { grid-area: 2 / 1; justify-self: center; }
+    .lbl-min { grid-area: 2 / 3; justify-self: center; }
+    .lbl-sec { grid-area: 2 / 5; justify-self: center; }
+    .lbl-cs { grid-area: 2 / 7; justify-self: center; }
+    #fullscreenButton {
+      background: var(--color-transparent);
+      border: none;
+      color: var(--text-tertiary);
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 1199;
+      transition: color 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0.5rem;
+      font-size: 30px;
+      touch-action: manipulation;
+    }
+    #fullscreenButton:hover {
+      color: var(--text-secondary);
+      transform: scale(1.15);
+    }
+    .button-container {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.5rem;
+      align-self: flex-start;
+    }
+    button.control-btn {
+      background: var(--grad-btn-bg);
+      color: var(--text-secondary);
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--btn-border);
+      border-radius: 100px;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 600;
+      font-size: clamp(0.5rem, 1vw, 0.75rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: .5s cubic-bezier(.16, 1, .3, 1);
+      user-select: none;
+      touch-action: manipulation;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    button.control-btn:hover {
+      transform: translateY(-1.5px);
+      color: var(--text-primary);
+      border-color: var(--btn-border-hover);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    button.control-btn:active {
+      transform: scale(.95);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    button.control-btn:focus:not(:focus-visible),
+    #fullscreenButton:focus:not(:focus-visible) {
+      outline: none;
+    }
+    button.control-btn:focus-visible,
+    #fullscreenButton:focus-visible {
+      outline: 1.5px solid var(--text-primary);
+      outline-offset: 5px;
+    }
+    #startButton { color: var(--text-primary); border-color: var(--state-start); }
+    #startButton.paused-state { border-color: var(--state-pause); }
+    @media (min-width: 1000px) {
+      .label { font-size: 1rem; }
+      .timer { column-gap: 1rem; }
+      .button-container { margin-top: 5rem; gap: 2.5rem; }
+      button.control-btn { padding: 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <button type="button" id="fullscreenButton" aria-label="Toggle Fullscreen">&#x29E0;</button>
+  <main class="main">
+    <div id="dateDisplay" class="date-display">
+      <span class="day" id="dayDisplay"></span> / <span id="fullDateDisplay"></span>
+    </div>
+    <div id="timerContainer" class="timer">
+      <span class="time-val" id="hours">00</span><span class="sep sep-1">:</span>
+      <span class="time-val" id="minutes">00</span><span class="sep sep-2">:</span>
+      <span class="time-val" id="seconds">00</span><span class="sep sep-3">.</span>
+      <span class="time-val cs" id="centiseconds">00</span>
+      <span class="label lbl-hr">HOURS</span>
+      <span class="label lbl-min">MINUTES</span>
+      <span class="label lbl-sec">SECONDS</span>
+      <span class="label lbl-cs">CS</span>
+    </div>
+    <div class="button-container">
+      <button type="button" id="startButton" class="control-btn">Start</button>
+      <button type="button" id="resetButton" class="control-btn">Reset</button>
+    </div>
+  </main>
+  <script>
+    (function StopwatchModule() {
+      class TimeUtils {
+        static parseMs(timeMs) {
+          return {
+            cs: Math.floor(timeMs / 10) % 100,
+            sec: Math.floor(timeMs / 1000) % 60,
+            min: Math.floor(timeMs / 60000) % 60,
+            hr: Math.floor(timeMs / 3600000)
+          };
+        }
+        static pad(num) {
+          return num.toString().padStart(2, "0");
+        }
+      }
+      class StorageManager {
+        constructor(storageKey = 'stopwatchState') {
+          this.key = storageKey;
+        }
+        save(state) {
+          try {
+            let currentTotalElapsed;
+            if (state.isRunning) {
+              if (document.visibilityState === 'hidden' && state.backgroundAnchorTime) {
+                currentTotalElapsed = Math.max(state.elapsedAtSleep, Date.now() - state.backgroundAnchorTime);
+              } else {
+                currentTotalElapsed = state.storedElapsed + (performance.now() - state.sessionStart);
+              }
+            } else {
+              currentTotalElapsed = state.storedElapsed;
+            }
+            const absoluteAnchorTime = Date.now() - currentTotalElapsed;
+            localStorage.setItem(this.key, JSON.stringify({
+              isRunning: state.isRunning,
+              absoluteAnchorTime: absoluteAnchorTime,
+              elapsedTime: currentTotalElapsed
+            }));
+          } catch (e) {
+            console.warn("Failed to save state:", e);
+          }
+        }
+        load() {
+          try {
+            const data = localStorage.getItem(this.key);
+            return data ? JSON.parse(data) : null;
+          } catch (e) {
+            return null;
+          }
+        }
+      }
+      class DeviceManager {
+        constructor() {
+          this.wakeLock = null;
+          this.isRequestingWakeLock = false;
+        }
+        async requestWakeLock(isRunningCheck) {
+          try {
+            if ('wakeLock' in navigator && this.wakeLock === null && !this.isRequestingWakeLock) {
+              this.isRequestingWakeLock = true;
+              const lock = await navigator.wakeLock.request('screen');
+              this.isRequestingWakeLock = false;
+              if (isRunningCheck()) {
+                if (this.wakeLock !== null) {
+                  lock.release().catch(() => {});
+                } else {
+                  this.wakeLock = lock;
+                  this.wakeLock.addEventListener('release', () => { this.wakeLock = null; });
+                }
+              } else {
+                lock.release().catch(() => {});
+              }
+            }
+          } catch (err) {
+            this.isRequestingWakeLock = false;
+          }
+        }
+        releaseWakeLock() {
+          if (this.wakeLock !== null) {
+            this.wakeLock.release().catch(() => {});
+            this.wakeLock = null;
+          }
+          this.isRequestingWakeLock = false;
+        }
+        toggleFullscreen() {
+          const doc = window.document;
+          const docEl = doc.documentElement;
+          if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+            const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen;
+            if (req) {
+              const promise = req.call(docEl);
+              if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+            }
+          } else {
+            const exit = doc.exitFullscreen || doc.webkitExitFullscreen;
+            if (exit) {
+              const promise = exit.call(doc);
+              if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+            }
+          }
+        }
+      }
+      class ClockDisplay {
+        constructor() {
+          this.els = {
+            day: document.getElementById("dayDisplay"),
+            fullDate: document.getElementById("fullDateDisplay")
+          };
+          this.timeoutId = null;
+          this.formatters = {
+            day: new Intl.DateTimeFormat('en-US', { weekday: "long" }),
+            month: new Intl.DateTimeFormat('en-US', { month: "long" })
+          };
+        }
+        init() {
+          this.update();
+        }
+        update() {
+          const now = new Date();
+          const hh = TimeUtils.pad(now.getHours());
+          const mm = TimeUtils.pad(now.getMinutes());
+          const ss = TimeUtils.pad(now.getSeconds());
+          const dayString = this.formatters.day.format(now);
+          if (this.els.day.textContent !== dayString) {
+            this.els.day.textContent = dayString;
+          }
+          this.els.fullDate.textContent = `${now.getDate()} ${this.formatters.month.format(now)} ${now.getFullYear()} / ${hh}:${mm}:${ss}`;
+          const msUntilNextSecond = 1000 - now.getMilliseconds() + 20;
+          if (this.timeoutId) clearTimeout(this.timeoutId);
+          this.timeoutId = setTimeout(() => this.update(), msUntilNextSecond);
+        }
+      }
+      class TimerUI {
+        constructor() {
+          this.els = {
+            container: document.getElementById("timerContainer"),
+            hr: document.getElementById("hours"),
+            min: document.getElementById("minutes"),
+            sec: document.getElementById("seconds"),
+            cs: document.getElementById("centiseconds"),
+            btnStart: document.getElementById("startButton"),
+            btnFull: document.getElementById("fullscreenButton")
+          };
+          this.last = { hr: -1, min: -1, sec: -1, cs: -1 };
+        }
+        init() {
+          if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) {
+            this.els.btnFull.style.display = 'none';
+          }
+        }
+        setButtonState(isRunning) {
+          if (isRunning) {
+            this.els.btnStart.textContent = "Pause";
+            this.els.btnStart.classList.add("paused-state");
+          } else {
+            this.els.btnStart.textContent = "Start";
+            this.els.btnStart.classList.remove("paused-state");
+          }
+        }
+        animate(element) {
+          element.animate([
+            { transform: 'translateY(8px) scale(.95) translateZ(0)', opacity: .5 },
+            { transform: 'translateY(-1px) scale(1.03) translateZ(0)', opacity: 1, offset: 0.6 },
+            { transform: 'translateY(0) scale(1) translateZ(0)', opacity: 1 }
+          ], {
+            duration: 180,
+            easing: 'cubic-bezier(.2, .8, .2, 1)'
+          });
+        }
+        updateTitle(t) {
+          document.title = `${TimeUtils.pad(t.hr)}:${TimeUtils.pad(t.min)}:${TimeUtils.pad(t.sec)} - Stopwatch`;
+        }
+        updateDisplay(timeMs, isRunning) {
+          const t = TimeUtils.parseMs(timeMs);
+          if (t.hr >= 100 && this.last.hr < 100) {
+            this.els.container.classList.add('three-digit-hr');
+          } else if (t.hr < 100 && this.last.hr >= 100) {
+            this.els.container.classList.remove('three-digit-hr');
+          }
+          if (t.cs !== this.last.cs) {
+            this.els.cs.textContent = TimeUtils.pad(t.cs);
+            this.last.cs = t.cs;
+          }
+          if (t.sec !== this.last.sec) {
+            this.els.sec.textContent = TimeUtils.pad(t.sec);
+            if (isRunning) this.animate(this.els.sec);
+            this.last.sec = t.sec;
+            this.updateTitle(t);
+          }
+          if (t.min !== this.last.min) {
+            this.els.min.textContent = TimeUtils.pad(t.min);
+            if (isRunning) this.animate(this.els.min);
+            this.last.min = t.min;
+          }
+          if (t.hr !== this.last.hr) {
+            this.els.hr.textContent = TimeUtils.pad(t.hr);
+            if (isRunning) this.animate(this.els.hr);
+            this.last.hr = t.hr;
+          }
+        }
+        resetMemory() {
+          this.last = { hr: -1, min: -1, sec: -1, cs: -1 };
+          this.els.container.classList.remove('three-digit-hr');
+          this.updateDisplay(0, false);
+        }
+      }
+      class TimerEngine {
+        constructor(ui, storage, device) {
+          this.ui = ui;
+          this.storage = storage;
+          this.device = device;
+          this.state = {
+            isRunning: false,
+            sessionStart: 0,
+            storedElapsed: 0,
+            frameId: null,
+            bgIntervalId: null,
+            backgroundAnchorTime: 0,
+            elapsedAtSleep: 0
+          };
+        }
+        init() {
+          const saved = this.storage.load();
+          if (saved && saved.isRunning && saved.absoluteAnchorTime) {
+            const calculatedElapsed = Math.max(saved.elapsedTime || 0, Date.now() - saved.absoluteAnchorTime);
+            this.start(calculatedElapsed);
+          } else if (saved) {
+            this.state.storedElapsed = saved.elapsedTime || 0;
+            this.ui.updateDisplay(this.state.storedElapsed, false);
+          } else {
+            this.ui.updateDisplay(0, false);
+          }
+        }
+        toggle() {
+          if (!this.state.isRunning) {
+            this.start();
+          } else {
+            this.pause();
+          }
+          this.storage.save(this.state);
+        }
+        start(elapsedOverride = null) {
+          if (this.state.frameId) cancelAnimationFrame(this.state.frameId);
+          this.state.isRunning = true;
+          if (elapsedOverride !== null) this.state.storedElapsed = elapsedOverride;
+          this.state.sessionStart = performance.now();
+          this.ui.setButtonState(true);
+          this.device.requestWakeLock(() => this.state.isRunning);
+          this.loop();
+        }
+        pause() {
+          this.state.isRunning = false;
+          if (this.state.frameId) {
+            cancelAnimationFrame(this.state.frameId);
+            this.state.frameId = null;
+          }
+          this.state.storedElapsed += (performance.now() - this.state.sessionStart);
+          this.ui.setButtonState(false);
+          this.device.releaseWakeLock();
+          this.ui.updateDisplay(this.state.storedElapsed, false);
+        }
+        reset() {
+          this.state.isRunning = false;
+          if (this.state.frameId) cancelAnimationFrame(this.state.frameId);
+          this.state.frameId = null;
+          this.state.storedElapsed = 0;
+          this.state.sessionStart = 0;
+          this.ui.resetMemory();
+          this.ui.setButtonState(false);
+          this.device.releaseWakeLock();
+          this.storage.save(this.state);
+        }
+        loop() {
+          if (!this.state.isRunning) return;
+          const currentElapsed = this.state.storedElapsed + (performance.now() - this.state.sessionStart);
+          this.ui.updateDisplay(currentElapsed, true);
+          this.state.frameId = requestAnimationFrame(() => this.loop());
+        }
+        handleVisibilityChange(isHidden) {
+          if (isHidden) {
+            if (this.state.isRunning) {
+              if (this.state.bgIntervalId) clearInterval(this.state.bgIntervalId);
+              this.state.elapsedAtSleep = this.state.storedElapsed + (performance.now() - this.state.sessionStart);
+              this.state.backgroundAnchorTime = Date.now() - this.state.elapsedAtSleep;
+              this.state.bgIntervalId = setInterval(() => {
+                const elapsed = Math.max(this.state.elapsedAtSleep, Date.now() - this.state.backgroundAnchorTime);
+                this.ui.updateTitle(TimeUtils.parseMs(elapsed));
+              }, 1000);
+            }
+          } else {
+            if (this.state.bgIntervalId) {
+              clearInterval(this.state.bgIntervalId);
+              this.state.bgIntervalId = null;
+            }
+            if (this.state.isRunning && this.state.backgroundAnchorTime) {
+              const elapsedWall = Date.now() - this.state.backgroundAnchorTime;
+              this.state.storedElapsed = Math.max(this.state.elapsedAtSleep, elapsedWall);
+              this.state.sessionStart = performance.now();
+              this.device.requestWakeLock(() => this.state.isRunning);
+            }
+          }
+        }
+      }
+      class StopwatchApp {
+        constructor() {
+          this.storage = new StorageManager();
+          this.device = new DeviceManager();
+          this.clock = new ClockDisplay();
+          this.ui = new TimerUI();
+          this.engine = new TimerEngine(this.ui, this.storage, this.device);
+        }
+        init() {
+          this.ui.init();
+          this.clock.init();
+          this.engine.init();
+          this.bindEvents();
+          if (document.visibilityState === 'hidden') {
+            this.engine.handleVisibilityChange(true);
+          }
+        }
+        bindEvents() {
+          document.getElementById("startButton").addEventListener('click', () => this.engine.toggle());
+          document.getElementById("resetButton").addEventListener('click', () => this.engine.reset());
+          document.getElementById("fullscreenButton").addEventListener('click', () => this.device.toggleFullscreen());
+          document.addEventListener('visibilitychange', () => {
+            const isHidden = document.visibilityState === 'hidden';
+            this.engine.handleVisibilityChange(isHidden);
+            if (isHidden) this.storage.save(this.engine.state);
+          });
+          window.addEventListener('beforeunload', () => this.storage.save(this.engine.state));
+          window.addEventListener('pagehide', () => this.storage.save(this.engine.state));
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => new StopwatchApp().init());
+      } else {
+        new StopwatchApp().init();
+      }
+    })();
+  </script>
+</body>
+</html>

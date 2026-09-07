@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TO-DO</title>
+  <link rel="stylesheet" href="styles.css" />
+ </head>
+ <body>
+  <div class="container">
+   <header>
+    <h1>TODO</h1>
+    <p id="date"></p>
+   </header>
+
+   <div class="input-group">
+    <input type="text" id="task-input" placeholder="New task." />
+    <button id="add-btn">+</button>
+   </div>
+
+   <div class="import-export-group">
+    <button id="export-btn" class="import-export-btn">Export Tasks</button>
+    <button id="import-btn" class="import-export-btn">Import Tasks</button>
+    <input type="file" id="import-file" accept="application/json" style="display: none;" />
+   </div>
+
+   <div id="error-message"></div>
+
+   <section>
+    <ul id="pending-tasks"></ul>
+   </section>
+
+   <div id="chill-message" class="hidden">Nothing left. Relax.</div>
+
+   <section>
+    <div class="completed-header">
+     <h3>Completed</h3>
+     <button id="toggle-completed">Show</button>
+    </div>
+    <ul id="completed-tasks" class="hidden"></ul>
+   </section>
+
+   <footer>
+    <div id="completion-percentage"></div>
+    <button id="clear-all">Clear All</button>
+   </footer>
+  </div>
+
+  <script src="app.js"></script>
+ </body>
+</html>

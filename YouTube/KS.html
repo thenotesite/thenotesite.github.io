@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="yt.png" />
+    <title>MAINS [KAUSHIK SIR]</title>
+    <style>
+      @media print {
+        .noprint {
+          display: none;
+        }
+      }
+      .list {
+        text-align: center;
+      }
+      .list a {
+        text-decoration: none;
+        background: none;
+        border: 1px solid white;
+        padding: 10px 20px;
+        margin: 0 3px;
+        color: #ffebcd;
+        transition: 0.1s ease-in-out;
+      }
+      .list a:hover {
+        color: #fff;
+        background: #1fa1c0;
+        box-shadow: none;
+      }
+    </style>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Fira Code", monospace;
+        background: #0d1117;
+        color: #c9d1d9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 40px;
+        background: linear-gradient(90deg, #de4040, #1fa1c0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.075em;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+        justify-content: center;
+        width: 100%;
+        max-width: 1400px;
+      }
+
+      .videoCard {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease;
+        position: relative;
+      }
+
+      .videoCard:hover {
+        transform: translateY(-2px);
+        border-color: rgba(88, 166, 255, 0.3);
+        box-shadow: 0 12px 30px rgba(10, 20, 130, 0.75);
+      }
+
+      .thumbnail {
+        position: relative;
+      }
+
+      .thumbnail img {
+        width: 100%;
+        display: block;
+        height: auto;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .overlay {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(13, 17, 23, 0.75);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .numberBadge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(142, 24, 72, 0.75);
+        color: white;
+        font-weight: 700;
+        font-size: 0.85em;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      .info {
+        padding: 15px;
+      }
+
+      .meta {
+        color: #f0f6fc;
+        font-weight: 500;
+        font-size: 1em;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 20px 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>// MAINS [KAUSHIK SIR]</h1>
+    <div class="noprint">
+      <p class="list">
+        <a href="KS.html">KS</a>
+        <a href="SS.html">SS</a>
+        <a href="HS.html">HS</a>
+      </p>
+    </div>
+    <br /><br />
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+      const videoData = `
+Thumbnail url,Duration,Uploaded Time,Video url
+https://i.ytimg.com/vi/IPSA73EytHU/maxresdefault.jpg,"1 Hours, 26 Minutes, 45 Seconds",2025-10-16T17:29:27,https://www.youtube.com/watch?v=IPSA73EytHU
+https://i.ytimg.com/vi/gEp0M-0VLDo/maxresdefault.jpg,"2 Hours, 18 Minutes, 48 Seconds",2025-10-10T09:05:08,https://www.youtube.com/watch?v=gEp0M-0VLDo
+https://i.ytimg.com/vi/fkk5QqZhFYk/maxresdefault.jpg,"1 Hours, 43 Minutes, 36 Seconds",2025-10-06T17:34:37,https://www.youtube.com/watch?v=fkk5QqZhFYk
+https://i.ytimg.com/vi/i7Wp8w33r2c/maxresdefault.jpg,"1 Hours, 35 Minutes, 7 Seconds",2025-09-25T17:28:30,https://www.youtube.com/watch?v=i7Wp8w33r2c
+https://i.ytimg.com/vi/2cwK4cEafa8/maxresdefault.jpg,"1 Hours, 39 Minutes, 6 Seconds",2025-08-28T17:44:43,https://www.youtube.com/watch?v=2cwK4cEafa8
+https://i.ytimg.com/vi/Qk-YaOpgLtM/maxresdefault.jpg,"1 Hours, 7 Minutes, 31 Seconds",2025-07-17T17:02:54,https://www.youtube.com/watch?v=Qk-YaOpgLtM
+https://i.ytimg.com/vi/NHHEXG7G2Yo/maxresdefault.jpg,"1 Hours, 28 Minutes, 48 Seconds",2025-07-03T17:22:39,https://www.youtube.com/watch?v=NHHEXG7G2Yo
+https://i.ytimg.com/vi/heLm98c8-SA/maxresdefault.jpg,"1 Hours, 19 Minutes, 47 Seconds",2025-06-23T17:16:39,https://www.youtube.com/watch?v=heLm98c8-SA
+https://i.ytimg.com/vi/WFbjTQw2UFU/maxresdefault.jpg,"1 Hours, 48 Minutes, 20 Seconds",2025-05-20T17:50:19,https://www.youtube.com/watch?v=WFbjTQw2UFU
+https://i.ytimg.com/vi/sTlseSEdmVE/maxresdefault.jpg,"3 Hours, 0 Minutes, 43 Seconds",2025-04-08T13:53:17,https://www.youtube.com/watch?v=sTlseSEdmVE
+https://i.ytimg.com/vi/IvI_GjIIX4w/maxresdefault.jpg,"2 Hours, 32 Minutes, 23 Seconds",2025-03-26T18:21:07,https://www.youtube.com/watch?v=IvI_GjIIX4w
+https://i.ytimg.com/vi/n_jAHp4xDaA/maxresdefault.jpg,"2 Hours, 13 Minutes, 59 Seconds",2025-03-20T17:59:36,https://www.youtube.com/watch?v=n_jAHp4xDaA
+https://i.ytimg.com/vi/rpS3wCpR7vY/maxresdefault.jpg,"2 Hours, 37 Minutes, 21 Seconds",2025-03-18T18:28:03,https://www.youtube.com/watch?v=rpS3wCpR7vY
+https://i.ytimg.com/vi/UmsMkAoKYR4/maxresdefault.jpg,"1 Hours, 52 Minutes, 3 Seconds",2025-03-13T18:01:39,https://www.youtube.com/watch?v=UmsMkAoKYR4
+https://i.ytimg.com/vi/twhNy8d7kjI/maxresdefault.jpg,"2 Hours, 55 Minutes, 57 Seconds",2025-03-12T16:15:06,https://www.youtube.com/watch?v=twhNy8d7kjI
+https://i.ytimg.com/vi/2yzg9iWPgaU/maxresdefault.jpg,"2 Hours, 0 Minutes, 24 Seconds",2025-03-10T17:43:05,https://www.youtube.com/watch?v=2yzg9iWPgaU
+https://i.ytimg.com/vi/Qn-FUG6gKaA/maxresdefault.jpg,"1 Hours, 56 Minutes, 11 Seconds",2024-11-26T17:47:57,https://www.youtube.com/watch?v=Qn-FUG6gKaA
+https://i.ytimg.com/vi/bxPXKfSPw6E/maxresdefault.jpg,"1 Hours, 11 Minutes, 46 Seconds",2024-11-25T17:08:52,https://www.youtube.com/watch?v=bxPXKfSPw6E
+https://i.ytimg.com/vi/fdoGQWTyMvw/maxresdefault.jpg,"1 Hours, 39 Minutes, 40 Seconds",2024-11-23T17:43:55,https://www.youtube.com/watch?v=fdoGQWTyMvw
+https://i.ytimg.com/vi/BAuKVT9a0Bo/maxresdefault.jpg,"1 Hours, 0 Minutes, 19 Seconds",2024-10-30T17:06:15,https://www.youtube.com/watch?v=BAuKVT9a0Bo
+`;
+
+      function parseCSVLine(line) {
+        const regex = /("(?:[^"]|"")*"|[^,]*)(,|$)/g;
+        const fields = [];
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+          let val = match[1];
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.slice(1, -1).replace(/""/g, '"');
+          }
+          fields.push(val.trim());
+          if (match[2] === "") break;
+        }
+        return fields;
+      }
+
+      function formatDuration(str) {
+        if (!str) return "";
+        const clean = str.trim();
+        const hMatch = clean.match(/(\d+)\s*Hours?/i);
+        const mMatch = clean.match(/(\d+)\s*Minutes?/i);
+        const sMatch = clean.match(/(\d+)\s*Seconds?/i);
+        const h = hMatch ? Number(hMatch[1]) : 0;
+        const m = mMatch ? Number(mMatch[1]) : 0;
+        const s = sMatch ? Number(sMatch[1]) : 0;
+        const pad = (n) => String(n).padStart(2, "0");
+        return h === 0 ? `${pad(m)}:${pad(s)}` : `${h}:${pad(m)}:${pad(s)}`;
+      }
+
+      function isoToDateObject(iso) {
+        if (!iso) return null;
+        const hasOffset = /Z|[+\-]\d{2}:\d{2}$/.test(iso);
+        const normalized = hasOffset ? iso : iso + "Z";
+        const d = new Date(normalized);
+        return isNaN(d) ? null : d;
+      }
+
+      function formatDate(iso) {
+        const d = isoToDateObject(iso);
+        if (!d) return iso;
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        const month = d.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
+        const year = d.getUTCFullYear();
+        return `${day} ${month} ${year}`;
+      }
+
+      function generateGallery() {
+        const lines = videoData
+          .trim()
+          .split("\n")
+          .filter((l) => l && !l.toLowerCase().startsWith("thumbnail"))
+          .map(parseCSVLine);
+
+        const total = lines.length;
+        const gallery = document.getElementById("gallery");
+        gallery.innerHTML = "";
+
+        lines.forEach(([thumb, duration, uploaded, url], index) => {
+          const videoNumber = total - index; // reverse numbering
+          const time = formatDuration(duration || "");
+          const date = formatDate(uploaded || "");
+
+          const card = document.createElement("div");
+          card.className = "videoCard";
+          card.innerHTML = `
+            <a href="${url}" target="_blank">
+              <div class="thumbnail">
+                <img loading="lazy" src="${thumb}">
+                <div class="numberBadge">#${videoNumber}</div>
+                <div class="overlay">${time}</div>
+              </div>
+              <div class="info">
+                <div class="meta">${date}</div>
+              </div>
+            </a>
+          `;
+          gallery.appendChild(card);
+        });
+      }
+
+      generateGallery();
+    </script>
+  </body>
+</html>
